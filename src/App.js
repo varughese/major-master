@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 import * as ROUTES from './constants/routes';
 import { Container, Row } from 'reactstrap';
 
-import BootstrapExample from './components/bootstrapex';
+import { BootstrapExample } from './components';
 
 
 class App extends Component {
