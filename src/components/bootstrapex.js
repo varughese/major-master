@@ -1,30 +1,85 @@
 import React, { Component } from 'react';
 import { Container, Row, Col, Button, Form, FormGroup, Label, Input, FormText} from 'reactstrap';
 
+import { withFirebase } from './Firebase';
+
 class BootstrapExample extends Component {
 	render() {
 	  return (
-		<Container>
-		  <Row>
-			<Col sm="12" md="6">
-			  <Button color="primary">primary</Button>{' '}
-			  <Button color="secondary">secondary</Button>{' '}
-			  <Button color="success">success</Button>{' '}
-			  <Button color="info">info</Button>{' '}
-			  <Button color="warning">warning</Button>{' '}
-			  <Button color="danger">danger</Button>{' '}
-			  <Button color="link">link</Button>
-			</Col>
-			
-			<Col sm="12" md="6">
-			  <FormExample />
-			</Col>
-		  </Row>
-		</Container>
+				<Container>
+						<Row>
+							<Col sm="12" md="6">
+								<Button color="primary">primary</Button>{' '}
+								<Button color="secondary">secondary</Button>{' '}
+								<Button color="success">success</Button>{' '}
+								<Button color="info">info</Button>{' '}
+								<Button color="warning">warning</Button>{' '}
+								<Button color="danger">danger</Button>{' '}
+								<Button color="link">link</Button>
+							</Col>
+							<Col sm="12" md="6">
+								<FirebaseExample />
+							</Col>
+							<Col sm="12" md="6">
+								<FormExample />
+							</Col>
+						</Row>
+					</Container>
 	  );
 	}
   }
-  
+	
+class FirebaseExampleBase extends Component {
+	constructor(props) {
+		super(props);
+
+		this.state = {
+			course_list: []
+		}
+	}
+
+	componentDidMount() {
+		this.setState({
+			loading: true
+		})
+		this.props.firebase.courses().on('value', snapshot => {
+			const courses = snapshot.val();
+			this.setState({
+				loading: false,
+				course_list: courses
+			});
+		})
+	}
+
+	componentWillUnmount() {
+		this.props.firebase.courses().off();
+	}
+
+	render() {
+		const { loading, course_list } = this.state; 
+		return loading ? <div>Loading</div> : (
+			<ol>
+			{course_list.map(course => (<CourseItem key={course} name={course} />))}
+			</ol>
+		);
+	}
+}
+
+class CourseItemBase extends Component {
+	async getCourseInfo() {
+		const { name } = this.props;
+		const snapshot = await this.props.firebase.course_descriptions().child(name).once('value');
+		alert(JSON.stringify(snapshot.val()));
+	}
+
+	render() {
+		return <Button color="primary" onClick={() => this.getCourseInfo()}>{this.props.name}</Button>
+	}
+}
+
+const CourseItem = withFirebase(CourseItemBase);
+const FirebaseExample = withFirebase(FirebaseExampleBase);
+	
 function FormExample(props) {
 return (<Form>
 		<FormGroup>

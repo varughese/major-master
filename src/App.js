@@ -5,7 +5,6 @@ import { Container, Row } from 'reactstrap';
 
 import { BootstrapExample } from './components';
 
-
 class App extends Component {
   render() {
     return (
