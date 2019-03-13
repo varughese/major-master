@@ -6,25 +6,25 @@ import { withFirebase } from './Firebase';
 class BootstrapExample extends Component {
 	render() {
 	  return (
-				<Container>
-						<Row>
-							<Col sm="12" md="6">
-								<Button color="primary">primary</Button>{' '}
-								<Button color="secondary">secondary</Button>{' '}
-								<Button color="success">success</Button>{' '}
-								<Button color="info">info</Button>{' '}
-								<Button color="warning">warning</Button>{' '}
-								<Button color="danger">danger</Button>{' '}
-								<Button color="link">link</Button>
-							</Col>
-							<Col sm="12" md="6">
-								<FirebaseExample />
-							</Col>
-							<Col sm="12" md="6">
-								<FormExample />
-							</Col>
-						</Row>
-					</Container>
+		<Container>
+			<Row>
+				<Col sm="12" md="6">
+					<Button color="primary">primary</Button>{' '}
+					<Button color="secondary">secondary</Button>{' '}
+					<Button color="success">success</Button>{' '}
+					<Button color="info">info</Button>{' '}
+					<Button color="warning">warning</Button>{' '}
+					<Button color="danger">danger</Button>{' '}
+					<Button color="link">link</Button>
+				</Col>
+				<Col sm="12" md="6">
+					<FirebaseExample />
+				</Col>
+				<Col sm="12" md="6">
+					<FormExample />
+				</Col>
+			</Row>
+		</Container>
 	  );
 	}
   }
