@@ -1,0 +1,63 @@
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+import * as ROUTES from '../constants/routes';
+import { Navbar, NavbarToggler, Collapse, Nav, 
+	NavItem, UncontrolledDropdown, DropdownToggle,
+	DropdownMenu, DropdownItem, NavbarBrand } from 'reactstrap';
+
+class Navigation extends Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			schedule: []
+		};
+	}
+
+	toggle = () => {
+		this.setState((state, props) => ({
+			isOpen: !state.isOpen
+		}))
+	}
+
+	render() {
+		return (
+			<Navbar color="dark" dark expand="md">
+				<NavbarBrand href="/">Major Master</NavbarBrand>
+				<NavbarToggler onClick={this.toggle} />
+				<Collapse isOpen={this.state.isOpen} navbar>
+					<Nav className="ml-auto" navbar>
+						<NavItem>
+							<Link className="nav-link" to={ROUTES.HOME}>Home</Link>
+						</NavItem>
+						<NavItem>
+							<Link className="nav-link" to={ROUTES.EDIT_SCHEDULE}>Edit Schedule</Link>
+						</NavItem>
+						<NavItem>
+							<Link className="nav-link" to={ROUTES.VIEW_SCHEDULE}>View Schedule</Link>
+						</NavItem>
+						<NavItem>
+							<Link className="nav-link" to="/testbootstrap">Test Bootstrap</Link>
+						</NavItem>
+						<UncontrolledDropdown nav inNavbar>
+							<DropdownToggle nav caret>My Account</DropdownToggle>
+							<DropdownMenu right>
+								<DropdownItem>
+								Option 1
+								</DropdownItem>
+								<DropdownItem>
+								Option 2
+								</DropdownItem>
+								<DropdownItem divider />
+								<DropdownItem>
+								Reset
+								</DropdownItem>
+							</DropdownMenu>
+						</UncontrolledDropdown>
+					</Nav>
+				</Collapse>
+			</Navbar>
+		);
+	}
+}
+
+export default Navigation;
