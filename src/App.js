@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import * as ROUTES from './constants/routes';
-import { Container, Row } from 'reactstrap';
+import { Container } from 'reactstrap';
 
 import { BootstrapExample, EditSchedule, ViewSchedule, Home  } from './components';
 import Navigation from './components/navigation';
@@ -12,7 +12,7 @@ class App extends Component {
       <Router>
         <>
           <Navigation />
-          <Container>
+          <Container fluid>
               <Switch>
                 <Route path={ROUTES.HOME} component={Home}></Route>
                 <Route path={ROUTES.SIGN_UP}></Route>

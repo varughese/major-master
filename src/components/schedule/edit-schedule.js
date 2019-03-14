@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { Row, Col } from 'reactstrap';
+import SidePanel from './side-panel';
+import WorkArea from './work-area';
 
 class EditSchedule extends Component {
 	constructor(props) {
@@ -11,10 +13,12 @@ class EditSchedule extends Component {
 
 	render() {
 		return (
-			<Row>
-				<Col>
-					<h1>Edit Schedule page</h1>
-					<p>Edit sched</p>
+			<Row className="schedule-viewer-row">
+				<Col md="4" >
+					<SidePanel />
+				</Col>
+				<Col md="8" >
+					<WorkArea />
 				</Col>
 			</Row>
 		);

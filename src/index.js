@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './styles/index.sass';
+import './styles/bootstrap-majormaster.sass';
+import './styles/styles.css';
 import App from './App';
 
 import Firebase, { FirebaseContext } from './components/firebase';
