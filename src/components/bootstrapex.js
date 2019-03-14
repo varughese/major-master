@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Container, Row, Col, Button, Form, FormGroup, Label, Input, FormText} from 'reactstrap';
 
-import { withFirebase } from './Firebase';
+import { withFirebase } from './firebase';
 
 class BootstrapExample extends Component {
 	render() {
