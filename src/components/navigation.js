@@ -19,6 +19,12 @@ class Navigation extends Component {
 		}))
 	}
 
+	closeCollapsed = () => {
+		this.setState({
+			isOpen: false
+		})
+	}
+
 	render() {
 		return (
 			<Navbar color="dark" dark expand="md">
@@ -26,31 +32,25 @@ class Navigation extends Component {
 				<NavbarToggler onClick={this.toggle} />
 				<Collapse isOpen={this.state.isOpen} navbar>
 					<Nav className="ml-auto" navbar>
-						<NavItem>
+						<NavItem onClick={this.closeCollapsed}>
 							<Link className="nav-link" to={ROUTES.HOME}>Home</Link>
 						</NavItem>
-						<NavItem>
+						<NavItem onClick={this.closeCollapsed}>
 							<Link className="nav-link" to={ROUTES.EDIT_SCHEDULE}>Edit Schedule</Link>
 						</NavItem>
-						<NavItem>
+						<NavItem onClick={this.closeCollapsed}>
 							<Link className="nav-link" to={ROUTES.VIEW_SCHEDULE}>View Schedule</Link>
 						</NavItem>
-						<NavItem>
+						<NavItem onClick={this.closeCollapsed}>
 							<Link className="nav-link" to="/testbootstrap">Test Bootstrap</Link>
 						</NavItem>
 						<UncontrolledDropdown nav inNavbar>
 							<DropdownToggle nav caret>My Account</DropdownToggle>
 							<DropdownMenu right>
-								<DropdownItem>
-								Option 1
-								</DropdownItem>
-								<DropdownItem>
-								Option 2
-								</DropdownItem>
+								<DropdownItem>Option 1</DropdownItem>
+								<DropdownItem>Option 2</DropdownItem>
 								<DropdownItem divider />
-								<DropdownItem>
-								Reset
-								</DropdownItem>
+								<DropdownItem>Reset</DropdownItem>
 							</DropdownMenu>
 						</UncontrolledDropdown>
 					</Nav>

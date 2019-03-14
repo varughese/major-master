@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 import * as ROUTES from './constants/routes';
 import { Container, Row } from 'reactstrap';
 
-import { BootstrapExample, EditSchedule, ViewSchedule  } from './components';
+import { BootstrapExample, EditSchedule, ViewSchedule, Home  } from './components';
 import Navigation from './components/navigation';
 
 class App extends Component {
@@ -13,14 +13,8 @@ class App extends Component {
         <>
           <Navigation />
           <Container>
-              <Row>
-                <Link to="/">Home</Link>
-                <Link to={ROUTES.EDIT_SCHEDULE}>Edit Schedule</Link>
-                <Link to={ROUTES.VIEW_SCHEDULE}>View Schedule</Link>
-                <Link to="/testbootstrap">Test boostrap</Link>
-              </Row>
               <Switch>
-                <Route path={ROUTES.HOME}></Route>
+                <Route path={ROUTES.HOME} component={Home}></Route>
                 <Route path={ROUTES.SIGN_UP}></Route>
                 <Route path={ROUTES.SIGN_IN}></Route>
                 <Route path={ROUTES.EDIT_INFO}></Route>
