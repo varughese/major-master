@@ -27,11 +27,11 @@ class Navigation extends Component {
 
 	render() {
 		return (
-			<Navbar color="dark" dark expand="md">
+			<Navbar color="primary" dark expand="md">
 				<NavbarBrand href="/">Major Master</NavbarBrand>
 				<NavbarToggler onClick={this.toggle} />
 				<Collapse isOpen={this.state.isOpen} navbar>
-					<Nav className="ml-auto" navbar>
+					<Nav className="ml-auto bg-primary" navbar>
 						<NavItem onClick={this.closeCollapsed}>
 							<Link className="nav-link" to={ROUTES.HOME}>Home</Link>
 						</NavItem>
