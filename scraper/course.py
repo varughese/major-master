@@ -87,7 +87,7 @@ class PittSubject:
                                                    ))
             elif child.text != '':
                 course_description = child.text
-                course_number, course_title = course_description.split(' - ')
+                course_number, course_title = course_description.split(' - ',1)
                 course_number = course_number.split(' ')[1]
                 self._courses[course_number] = PittCourse(parent=self, course_number=course_number,
                                                           course_title=course_title)
@@ -206,7 +206,7 @@ class PittSection:
         date = self.__extract_data_past_colon(data[5]).split(' - ')
         if "," in date[1]:
             date[1] = date[1].split(",")[0]
-        # print(data)
+        #print(data)
         self.start_date = datetime.strptime(date[0], '%m/%d/%Y')
         self.end_date = datetime.strptime(date[1], '%m/%d/%Y')
 
@@ -256,8 +256,13 @@ class PittSection:
         data = [point for point in data.next_siblings if point != '\n']
         self._extra = {
             'units': self.__extract_data_from_div_section(data[2]),
-            'description': self.__extract_data_from_div_section(data[4])
+            'description': ''
         }
+        try:
+            self._extra['description'] = self.__extract_data_from_div_section(data[4])
+        except:
+            print('caught no description on ' + self.parent_subject.subject + self.parent_course.number) 
+
         if 'Enrollment Requirements' in data[5].text:
             self._extra['preq'] = self.__extract_data_past_colon(self.__extract_data_from_div_section(data[5]))
             if 'Class Attributes' in data[6].text:
