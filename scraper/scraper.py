@@ -17,12 +17,47 @@ class Course:
 
 # courses_file = open("classes.txt", "w")
 
-class_dict = course.get_term_courses(term="2201", subject="CHEM")
-test_course = class_dict['0310']
-test_section_list = test_course.sections
-sect = test_section_list[0].to_dict(extra_details=True)
-for key in sect.items():
-    print(key)
+
+class_dict = course.get_term_courses(term="2201", subject="CS")
+
+for course in class_dict.courses:
+    current = class_dict[course]
+
+    className = current.title
+    major = current.subject
+    classNumber = current.number
+    id = major + "" + classNumber
+    prereq = []
+    recitation = False
+    credits = 0
+    description = ""
+    coreq = []
+
+    foundLecture = False
+    for section in current.sections:
+        typ = section.section_type
+        if typ == 'REC':
+            recitation = True
+            continue
+        elif typ == 'LEC':  
+            if foundLecture: continue 
+            
+            extra = section.extra_details
+            credits = extra['units']
+            description = extra['description']
+            if 'preq' in extra:
+                print(extra['preq'])
+
+            foundLecture = True
+        else:
+            print("diff type error: " + typ)
+
+# test_course = class_dict['0310']
+# test_section_list = test_course.sections
+# sect = test_section_list[0].to_dict(extra_details=True)
+# for key in sect.items():
+#     print(key)
+
 # pprint(cs_section_list)
 # print(type(sect._extra))
 
