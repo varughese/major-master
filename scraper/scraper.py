@@ -14,10 +14,14 @@ class Course:
         self.description = description
         self.coreq = coreq
 
+    def __str__(self):
+        return str(self.id)
+
+
 
 # courses_file = open("classes.txt", "w")
 
-
+classes = []
 class_dict = course.get_term_courses(term="2201", subject="CS")
 
 for course in class_dict.courses:
@@ -36,7 +40,7 @@ for course in class_dict.courses:
     foundLecture = False
     for section in current.sections:
         typ = section.section_type
-        if typ == 'REC':
+        if typ == 'REC' or typ == 'LAB':
             recitation = True
             continue
         elif typ == 'LEC':  
@@ -46,27 +50,14 @@ for course in class_dict.courses:
             credits = extra['units']
             description = extra['description']
             if 'preq' in extra:
-                print(extra['preq'])
+                
+                prereq.append(extra['preq'])
 
             foundLecture = True
         else:
-            print("diff type error: " + typ)
+            print("diff type error: " + typ + "_" + id)
 
-# test_course = class_dict['0310']
-# test_section_list = test_course.sections
-# sect = test_section_list[0].to_dict(extra_details=True)
-# for key in sect.items():
-#     print(key)
+    classes.append(Course(id,className,major, classNumber, prereq, recitation, credits, description, coreq))
 
-# pprint(cs_section_list)
-# print(type(sect._extra))
-
-# for sub in course.SUBJECTS:
-#     print(sub)
-#     class_dict = course.get_term_courses(term="2201", subject="CS")
-#     courses_file.write("------------------\n")
-#     courses_file.write(sub)
-
-#     for key, value in class_dict._courses.items():
-#         courses_file.write(key + "-" + value.title+"\n")
-#     courses_file.write("------------------\n")
+for clas in classes:
+    print(clas)
