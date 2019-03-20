@@ -17,10 +17,10 @@ class Course:
 
 # courses_file = open("classes.txt", "w")
 
-class_dict = course.get_term_courses(term="2201", subject="CS")
-cs_course = class_dict['1501']
-cs_section_list = cs_course.sections
-sect = cs_section_list[0].to_dict()
+class_dict = course.get_term_courses(term="2201", subject="CHEM")
+test_course = class_dict['0310']
+test_section_list = test_course.sections
+sect = test_section_list[0].to_dict(extra_details=True)
 for key in sect.items():
     print(key)
 # pprint(cs_section_list)

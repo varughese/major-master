@@ -204,6 +204,9 @@ class PittSection:
         self.instructor = self.__extract_data_past_colon(data[4])
 
         date = self.__extract_data_past_colon(data[5]).split(' - ')
+        if "," in date[1]:
+            date[1] = date[1].split(",")[0]
+        print(data)
         self.start_date = datetime.strptime(date[0], '%m/%d/%Y')
         self.end_date = datetime.strptime(date[1], '%m/%d/%Y')
 
