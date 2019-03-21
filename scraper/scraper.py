@@ -1,4 +1,6 @@
 import course
+import pickle
+import json
 
 class Course:
     def __init__(self, id, className, major, classNumber, prereq, recitation, credit, description, coreq):
@@ -14,6 +16,13 @@ class Course:
 
     def __str__(self):
         return str(self.id + ": " + self.className)
+
+def serialize_course(obj):
+   if isinstance(obj, Course):
+       serial = json.dumps(obj.__dict__, sort_keys=True, indent=4)
+       return serial
+   else:
+       raise TypeError ("Type not serializable")
 
 def scrape_subject_by_term(term, subj, course):
     classes = []
@@ -69,12 +78,26 @@ def scrape_subject_by_term(term, subj, course):
 
     return classes
 
+def save_obj(obj, name):
+    with open('data/'+ name + '.pkl', 'wb') as f:
+        pickle.dump(obj, f, pickle.HIGHEST_PROTOCOL)
+
+def load_obj(name):
+    with open('data/' + name + '.pkl', 'rb') as f:
+        return pickle.load(f)
+
 def main():
+    test_subs = ["CS", "CHEM"]
 
     data = {}
-    for subject in course.undergrad_subjects :
-        data["subject"] = scrape_subject_by_term("2201", subject, course)
+    for subject in test_subs :
+        data[subject] = scrape_subject_by_term("2201", subject, course)
 
-    # scrape_subject_by_term("2201", "HONORS", course)
+    # test = scrape_subject_by_term("2201", "CS", course)
+
+    to_write = json.dumps(data, default=serialize_course, sort_keys=True, indent=4)
+    f = open("dict.json","w")
+    f.write(to_write)
+    f.close()
 
 main()
