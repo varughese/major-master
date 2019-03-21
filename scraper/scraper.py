@@ -39,7 +39,7 @@ def scrape_subject_by_term(term, subj, course):
                 if typ == 'REC' or typ == 'LAB':
                     recitation = True
                     continue
-                elif typ == 'LEC' or typ == "PRA" or typ == "SEM" or typ == "CLB" or typ == "CLN" or typ == "WRK":  
+                elif typ == "LEC" or typ == "PRA" or typ == "SEM" or typ == "CLB" or typ == "CLN" or typ == "WRK" or typ == "CLQ" or typ == "MSM":  
                     if foundLecture: continue 
                     
                     try:
@@ -55,7 +55,7 @@ def scrape_subject_by_term(term, subj, course):
                         prereq.append(extra['preq'])
 
                     foundLecture = True
-                elif typ == "INT" or typ == "IND" or typ == "DIR":
+                elif typ == "INT" or typ == "IND" or typ == "DIR" or typ == "THE":
                     continue
                     #ignore these types
                 else:
