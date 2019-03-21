@@ -39,7 +39,7 @@ def scrape_subject_by_term(term, subj, course):
                 if typ == 'REC' or typ == 'LAB':
                     recitation = True
                     continue
-                elif typ == 'LEC' or typ == "PRA" or typ == "SEM" or typ == "CLB":  
+                elif typ == 'LEC' or typ == "PRA" or typ == "SEM" or typ == "CLB" or typ == "CLN" or typ == "WRK":  
                     if foundLecture: continue 
                     
                     try:
@@ -71,10 +71,10 @@ def scrape_subject_by_term(term, subj, course):
 
 def main():
 
-    # data = {}
-    # for subject in course.temp_SUBJECTS:
-    #     data["subject"] = scrape_subject_by_term("2201", subject, course)
+    data = {}
+    for subject in course.undergrad_subjects :
+        data["subject"] = scrape_subject_by_term("2201", subject, course)
 
-    scrape_subject_by_term("2201", "ENGR", course)
+    # scrape_subject_by_term("2201", "HONORS", course)
 
 main()

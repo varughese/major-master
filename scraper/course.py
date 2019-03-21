@@ -24,8 +24,7 @@ from typing import Union, List, Dict, Any
 
 import requests
 from bs4 import BeautifulSoup, Tag
-# 'ADMJ', 
-SUBJECTS = ['ADMPS', 'AFRCNA', 'AFROTC', 'ANTH', 'ARABIC', 'ARTSC', 'ASL', 'ASTRON', 'ATHLTR', 'BACC', 'BCHS',
+SUBJECTS = ['ADMJ','ADMPS', 'AFRCNA', 'AFROTC', 'ANTH', 'ARABIC', 'ARTSC', 'ASL', 'ASTRON', 'ATHLTR', 'BACC', 'BCHS',
             'BECN', 'BFAE', 'BFIN', 'BHRM', 'BIND', 'BIOENG', 'BIOETH', 'BIOINF', 'BIOSC', 'BIOST', 'BMIS', 'BMKT',
             'BOAH', 'BORG', 'BQOM', 'BSEO', 'BSPP', 'BUS', 'BUSACC', 'BUSADM', 'BUSBIS', 'BUSECN', 'BUSENV', 'BUSERV',
             'BUSFIN', 'BUSHRM', 'BUSMKT', 'BUSORG', 'BUSQOM', 'BUSSCM', 'BUSSPP', 'CDACCT', 'CDENT', 'CEE', 'CGS',
@@ -45,7 +44,7 @@ SUBJECTS = ['ADMPS', 'AFRCNA', 'AFROTC', 'ANTH', 'ARABIC', 'ARTSC', 'ASL', 'ASTR
             'TELCOM', 'THEA', 'TURKSH', 'UKRAIN', 'URBNST', 'VIET']
 
 
-undergrad_subjects = ["ADMJ","ADMPS","AFRCNA","AFROTC","ANTH","ARABIC","ARTSC","ASL","ASTRON","ATHLTR","BIOENG","BIOSC","BUS","BUSACC","BUSBIS","BUSECN","BUSENV","BUSERV","BUSFIN","BUSHRM","BUSMKT","BUSORG","BUSQOM","BUSSCM","BUSSPP","CDACCT","CEE","CGS","CHATHM","CHE","CHEM","CHIN","CLASS","CMMUSIC","CMTEPPER","COE","COMMRC","CS","CSD","DENHYG","DENT","ECE","ECON","EDUC","EM","ENGCMP","ENGFLM","ENGLIT","ENGR","ENGSCI","ENGWRT","FILMST","FP","FR","GEOL","GER","GREEK","GREEKM","GSWS","HAA","HEBREW","HIM","HINDI","HIST","HONORS","HPA","HPS","HRS","IE","IL","INFSCI","IRISH","ITAL","JPNSE","JS","KOREAN","LATIN","LCTL","LDRSHP","LEGLST","LING","MATH","ME","MEMS","MILS","MUSIC","NPHS","NROSCI","NUR","NUTR","ORBIOL","PEDC","PERS","PETE","PHIL","PHYS","POLISH","PORT","PS","PSY","PSYED","PUBSRV","QUECH","REHSCI","RELGST","RUSS","SA","SERCRO","SLAV","SLOVAK","SOC","SOCWRK","SPAN","STAT","SWAHIL","SWE","THEA","TURKSH","UKRAIN","URBNST","VIET"]
+undergrad_subjects = ["ADMJ","ADMPS","AFRCNA","AFROTC","ANTH","ARABIC","ARTSC","ASL","ASTRON","ATHLTR","BIOENG","BIOSC","BUS","BUSACC","BUSBIS","BUSECN","BUSENV","BUSERV","BUSFIN","BUSHRM","BUSMKT","BUSORG","BUSQOM","BUSSCM","BUSSPP","CDACCT","CEE","CGS","CHE","CHEM","CHIN","CLASS","CMMUSIC","COE","COMMRC","CS","CSD","DENHYG","DENT","ECE","ECON","EDUC","EM","ENGCMP","ENGFLM","ENGLIT","ENGR","ENGSCI","ENGWRT","FILMST","FP","FR","GEOL","GER","GREEK","GREEKM","GSWS","HAA","HEBREW","HIM","HINDI","HIST","HONORS","HPA","HPS","HRS","IE","IL","INFSCI","IRISH","ITAL","JPNSE","JS","KOREAN","LATIN","LCTL","LDRSHP","LEGLST","LING","MATH","ME","MEMS","MILS","MUSIC","NPHS","NROSCI","NUR","NUTR","ORBIOL","PEDC","PERS","PETE","PHIL","PHYS","POLISH","PORT","PS","PSY","PSYED","PUBSRV","QUECH","REHSCI","RELGST","RUSS","SA","SERCRO","SLAV","SLOVAK","SOC","SOCWRK","SPAN","STAT","SWAHIL","SWE","THEA","TURKSH","UKRAIN","URBNST","VIET"]
 
 
 CLASS_SEARCH_URL = 'https://psmobile.pitt.edu/app/catalog/classSearch'
@@ -91,7 +90,7 @@ class PittSubject:
                                                    ))
             elif child.text != '':
                 course_description = child.text
-                print(course_description)
+                #print(course_description)
                 course_number, course_title = course_description.split(' - ',1)
                 course_number = course_number.split(' ')[1]
                 self._courses[course_number] = PittCourse(parent=self, course_number=course_number,
@@ -199,7 +198,7 @@ class PittSection:
         days_times = self.__extract_data_past_colon(data[2])
         self.days = None
         self.times = None
-        if days_times != 'TBA':
+        if 'TBA' not in days_times:
             days_times = days_times.split(' - ')
             self.days, times = days_times[0].split(' ')
             self.days = [self.days[i * 2:(i * 2) + 2] for i in range(len(self.days) // 2)]
@@ -360,7 +359,7 @@ def _validate_term(term: Union[str, int]) -> str:
 
 def _validate_course(course: Union[int, str]) -> str:
     """Validates that the course name entered is 4 characters long and in string form."""
-    print(course)
+    #print(course)
     if course == '':
         raise ValueError('Invalid course number.')
     if not course.isdigit():
