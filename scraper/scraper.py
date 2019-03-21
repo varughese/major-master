@@ -23,7 +23,7 @@ def scrape_subject_by_term(term, subj, course):
         for course in class_dict.courses:
             current = class_dict[course] 
             classNumber = current.number
-            if int(classNumber) >= 2000: continue
+            if int(classNumber[0:4]) >= 2000: continue
             className = current.title
             major = current.subject
             id = major + "" + classNumber
@@ -47,6 +47,7 @@ def scrape_subject_by_term(term, subj, course):
                     except:
                         print(id)
                         raise
+                    if extra == None: continue
                     credits = extra['units']
                     description = extra['description']
                     if 'preq' in extra:
@@ -70,10 +71,10 @@ def scrape_subject_by_term(term, subj, course):
 
 def main():
 
-    data = {}
-    for subject in course.temp_SUBJECTS:
-        data["subject"] = scrape_subject_by_term("2201", subject, course)
+    # data = {}
+    # for subject in course.temp_SUBJECTS:
+    #     data["subject"] = scrape_subject_by_term("2201", subject, course)
 
-    # scrape_subject_by_term("2201", "CLST", course)
+    scrape_subject_by_term("2201", "ENGR", course)
 
 main()

@@ -44,8 +44,7 @@ SUBJECTS = ['ADMPS', 'AFRCNA', 'AFROTC', 'ANTH', 'ARABIC', 'ARTSC', 'ASL', 'ASTR
             'SOCWRK', 'SPAN', 'STAT', 'SWAHIL', 'SWBEH', 'SWCED', 'SWCOSA', 'SWE', 'SWGEN', 'SWINT', 'SWRES', 'SWWEL',
             'TELCOM', 'THEA', 'TURKSH', 'UKRAIN', 'URBNST', 'VIET']
 
-temp_SUBJECTS = ['COMMRC', 'CS', 'CSD', 'DENHYG', 'DENT', 'DIASCI', 'DMED', 'DSANE', 'DUPOSC', 'EAS', 'ECE', 'ECON',
-            'EDUC', 'EM', 'ENDOD', 'ENGCMP', 'ENGFLM', 'ENGLIT', 'ENGR', 'ENGSCI', 'ENGWRT', 'ENRES', 'EOH', 'EPIDEM',
+temp_SUBJECTS = ['ENGR', 'ENGSCI', 'ENGWRT', 'ENRES', 'EOH', 'EPIDEM',
             'FACDEV', 'FILMG', 'FILMST', 'FP', 'FR', 'FTADMA', 'FTDA', 'FTDB', 'FTDC', 'FTDJ', 'FTDR', 'GEOL', 'GER',
             'GERON', 'GREEK', 'GREEKM', 'GSWS', 'HAA', 'HEBREW', 'HIM', 'HINDI', 'HIST', 'HONORS', 'HPA', 'HPM', 'HPS',
             'HRS', 'HUGEN', 'IDM', 'IE', 'IL', 'IMB', 'INFSCI', 'INTBP', 'IRISH', 'ISB', 'ISSP', 'ITAL', 'JPNSE', 'JS',
@@ -268,7 +267,11 @@ class PittSection:
         resp = requests.get(self.url)
         soup = BeautifulSoup(resp.text, 'lxml')
         data = soup.find('div', {'class': 'section-content clearfix'})
-        data = [point for point in data.next_siblings if point != '\n']
+        try:
+            data = [point for point in data.next_siblings if point != '\n']
+        except AttributeError as error:
+            print("class not found")
+            return None
         self._extra = {
             'units': self.__extract_data_from_div_section(data[2]),
             'description': ''
@@ -366,8 +369,11 @@ def _validate_term(term: Union[str, int]) -> str:
 
 def _validate_course(course: Union[int, str]) -> str:
     """Validates that the course name entered is 4 characters long and in string form."""
+    print(course)
     if course == '':
         raise ValueError('Invalid course number.')
+    if not course.isdigit():
+        return course
     if isinstance(course, int):
         if course <= 0:
             raise ValueError('Invalid course number.')
