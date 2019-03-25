@@ -3,7 +3,13 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import * as ROUTES from './constants/routes';
 import { Container } from 'reactstrap';
 
-import { BootstrapExample, EditSchedule, ViewSchedule, Home  } from './components';
+import {
+  BootstrapExample,
+  EditSchedule,
+  ViewSchedule,
+  Home,
+  SignInPage
+} from './components';
 import Navigation from './components/navigation';
 
 class App extends Component {
@@ -16,7 +22,7 @@ class App extends Component {
               <Switch>
                 <Route path={ROUTES.HOME} component={Home}></Route>
                 <Route path={ROUTES.SIGN_UP}></Route>
-                <Route path={ROUTES.SIGN_IN}></Route>
+                <Route path={ROUTES.SIGN_IN} component={SignInPage}></Route>
                 <Route path={ROUTES.EDIT_INFO}></Route>
                 <Route path={ROUTES.ENTER_CLASSES}></Route>
                 <Route path={ROUTES.VIEW_SCHEDULE} component={ViewSchedule}></Route>
