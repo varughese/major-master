@@ -1,5 +1,6 @@
 import app from 'firebase/app';
 import 'firebase/database';
+import 'firebase/auth';
 
 const config = {
 	apiKey: "AIzaSyAsBSW4ShonjhvhdxFuqRwQs9_1VaTR-64",
@@ -15,12 +16,15 @@ class Firebase {
 		app.initializeApp(config);
 
 		this.db = app.database();
+		this.auth = app.auth();
 	}
 
 	courses = () => this.db.ref('course_list');
 
 	course_descriptions = () => this.db.ref('courses');
 
+	doSignInWithEmailAndPassword = (email, password) =>
+    this.auth.signInWithEmailAndPassword(email, password);
 }
 
 export default Firebase;

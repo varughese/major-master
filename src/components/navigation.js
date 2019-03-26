@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import * as ROUTES from '../constants/routes';
-import { Navbar, NavbarToggler, Collapse, Nav, 
+import { Navbar, NavbarToggler, Collapse, Nav,
 	NavItem, UncontrolledDropdown, DropdownToggle,
 	DropdownMenu, DropdownItem, NavbarBrand } from 'reactstrap';
 
@@ -34,6 +34,9 @@ class Navigation extends Component {
 					<Nav className="ml-auto bg-primary" navbar>
 						<NavItem onClick={this.closeCollapsed}>
 							<Link className="nav-link" to={ROUTES.HOME}>Home</Link>
+						</NavItem>
+						<NavItem onClick={this.closeCollapsed}>
+							<Link className="nav-link" to={ROUTES.SIGN_IN}>Sign In</Link>
 						</NavItem>
 						<NavItem onClick={this.closeCollapsed}>
 							<Link className="nav-link" to={ROUTES.EDIT_SCHEDULE}>Edit Schedule</Link>
