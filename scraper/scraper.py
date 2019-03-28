@@ -96,7 +96,7 @@ def main():
     # test = scrape_subject_by_term("2201", "CS", course)
 
     to_write = json.dumps(data, default=serialize_course, sort_keys=True, indent=4)
-    f = open("dict.json","w")
+    f = open("data.json","w")
     f.write(to_write)
     f.close()
 
