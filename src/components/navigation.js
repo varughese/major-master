@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import * as ROUTES from '../constants/routes';
+import firebase from "firebase/app";
+import "firebase/auth";
 import { Navbar, NavbarToggler, Collapse, Nav,
 	NavItem, UncontrolledDropdown, DropdownToggle,
 	DropdownMenu, DropdownItem, NavbarBrand } from 'reactstrap';
@@ -8,6 +10,7 @@ import { Navbar, NavbarToggler, Collapse, Nav,
 class Navigation extends Component {
 	constructor(props) {
 		super(props);
+		this.user = null;
 		this.state = {
 			isOpen: false
 		};
@@ -24,6 +27,7 @@ class Navigation extends Component {
 			isOpen: false
 		})
 	}
+		user = firebase.auth().currentUser;
 
 	render() {
 		return (
@@ -34,6 +38,9 @@ class Navigation extends Component {
 					<Nav className="ml-auto bg-primary" navbar>
 						<NavItem onClick={this.closeCollapsed}>
 							<Link className="nav-link" to={ROUTES.HOME}>Home</Link>
+						</NavItem>
+						<NavItem onClick={this.closeCollapsed}>
+							<Link className="nav-link" to={ROUTES.SIGN_UP}>Sign Up </Link>
 						</NavItem>
 						<NavItem onClick={this.closeCollapsed}>
 							<Link className="nav-link" to={ROUTES.SIGN_IN}>Sign In</Link>
