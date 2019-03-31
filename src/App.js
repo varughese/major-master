@@ -11,6 +11,7 @@ import {
   SignInPage
 } from './components';
 import Navigation from './components/navigation';
+import { withAuthentication } from './components/session'
 
 class App extends Component {
   render() {
@@ -37,4 +38,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default withAuthentication(App);
