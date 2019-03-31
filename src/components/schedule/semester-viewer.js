@@ -49,11 +49,12 @@ class Semester extends Component {
 			console.log(courses);
 		}
 		return (
-			<div className="semester-card">
+			<Col className="semester-card" md="auto">
+				<div className="semester-title">{this.props.title}</div>
 				<ul>
 					{courses.map(course => <li key={course.id}>{course.id}</li>)}
 				</ul>
-			</div>
+			</Col>
 		);
 	}
 }
@@ -68,13 +69,17 @@ class SemesterViewer extends Component {
 		const { semesters } = this.props;
 		let semestersElements = <div>Loading</div>
 		if(semesters) {
-			semestersElements = semesters.map((sem) => (<Semester key={sem.id} courses={sem.courses} term={sem.id} />))
+			semestersElements = semesters.map((sem) => (
+				<Semester key={sem.id} courses={sem.courses} title={sem.title} />
+			))
 		}
 		return (
 			<Row>
 				<Col>
-					<h1>Semester Viewer component</h1>
-					{semestersElements}
+					<h4>Semester Viewer component</h4>
+					<Row className="semesters-holder">
+						{semestersElements}
+					</Row>
 				</Col>
 			</Row>
 		);

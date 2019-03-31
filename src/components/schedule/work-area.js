@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import SemesterViewer from './semester-viewer';
 import ControlBar from './control-bar';
 import { withFirebase } from '../firebase';
+import termNamer from "../../constants/term-names";
 
 class WorkAreaBase extends Component {
 	constructor(props) {
@@ -27,10 +28,11 @@ class WorkAreaBase extends Component {
 	}
 
 	transformUserData(data) {
-		const semesters = Object.keys(data.semesters).map(k => data.semesters[k]).sort(a => a.id);
+		const semesters = Object.keys(data.semesters || []).map(k => data.semesters[k]).sort(a => a.id);
 		semesters.forEach(semester => {
-			const courses = Object.keys(semester.courses).map(k => semester.courses[k]);
+			const courses = Object.keys(semester.courses || []).map(k => semester.courses[k]);
 			semester.courses = courses;
+			semester.title = termNamer(semester.id);
 			return courses;
 		});
 		console.log(semesters);
