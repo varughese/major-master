@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Row, Col, Button } from 'reactstrap';
+import { Button } from 'reactstrap';
 
 class ControlBar extends Component {
 	constructor(props) {

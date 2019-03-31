@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Row, Col } from 'reactstrap';
+// import { Row, Col } from 'reactstrap';
 import SearchCourses from './search-courses';
 import RequirementViewer from './requirement-viewer';
 
