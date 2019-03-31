@@ -7,10 +7,10 @@ class EditSchedule extends Component {
 	render() {
 		return (
 			<Row className="schedule-viewer-row">
-				<Col md="4" >
+				<Col md="3" >
 					<SidePanel />
 				</Col>
-				<Col md="8" >
+				<Col md="9" >
 					<WorkArea />
 				</Col>
 			</Row>

@@ -42,7 +42,20 @@ class Semester extends Component {
 	}
 
 	render() {
-		return this.state.isEditMode ? <SemesterEditMode />  : <SemesterViewMode />;
+		const { courses } = this.props;
+		if (courses) {
+
+		} else {
+			console.log(courses);
+		}
+		return (
+			<Col className="semester-card" md="auto">
+				<div className="semester-title">{this.props.title}</div>
+				<ul>
+					{courses.map(course => <li key={course.id}>{course.id}</li>)}
+				</ul>
+			</Col>
+		);
 	}
 }
 
@@ -53,11 +66,20 @@ class SemesterViewer extends Component {
 	}
 
 	render() {
+		const { semesters } = this.props;
+		let semestersElements = <div>Loading</div>
+		if(semesters) {
+			semestersElements = semesters.map((sem) => (
+				<Semester key={sem.id} courses={sem.courses} title={sem.title} />
+			))
+		}
 		return (
 			<Row>
 				<Col>
-					<h1>Semester Viewer component</h1>
-					<Semester />
+					<h4>Semester Viewer component</h4>
+					<Row className="semesters-holder">
+						{semestersElements}
+					</Row>
 				</Col>
 			</Row>
 		);

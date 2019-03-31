@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import SemesterViewer from './semester-viewer';
 import ControlBar from './control-bar';
 import { withFirebase } from '../firebase';
+import termNamer from "../../constants/term-names";
 
 class WorkAreaBase extends Component {
 	constructor(props) {
@@ -19,11 +20,24 @@ class WorkAreaBase extends Component {
 		})
 		this.props.firebase.user_ref().on('value', snapshot => {
 			const userData = snapshot.val();
-			console.log(userData);
+			this.transformUserData(userData);
 			this.setState({
-				loading: false,
-				...userData
+				loading: false
 			});
+		})
+	}
+
+	transformUserData(data) {
+		const semesters = Object.keys(data.semesters || []).map(k => data.semesters[k]).sort(a => a.id);
+		semesters.forEach(semester => {
+			const courses = Object.keys(semester.courses || []).map(k => semester.courses[k]);
+			semester.courses = courses;
+			semester.title = termNamer(semester.id);
+			return courses;
+		});
+		console.log(semesters);
+		this.setState({
+			semesters: semesters
 		})
 	}
 
@@ -31,11 +45,17 @@ class WorkAreaBase extends Component {
 		this.props.firebase.user_ref().off();
 	}
 
+	addSemester(termcode, courses={}) {
+		const data = {};
+		data[termcode] = { courses: courses, id: termcode };
+		this.props.firebase.user_ref().child("semesters").update(data);
+	}
+
 	render() {
 		return (
 			<>
-				<SemesterViewer semesesters={this.state.semesters} />
-				<ControlBar />
+				<SemesterViewer  semesters={this.state.semesters} />
+				<ControlBar addSemester={this.addSemester.bind(this)} />
 			</>
 		);
 	}
