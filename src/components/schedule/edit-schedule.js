@@ -4,13 +4,6 @@ import SidePanel from './side-panel';
 import WorkArea from './work-area';
 
 class EditSchedule extends Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			schedule: []
-		};
-	}
-
 	render() {
 		return (
 			<Row className="schedule-viewer-row">

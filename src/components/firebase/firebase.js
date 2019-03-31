@@ -19,6 +19,19 @@ class Firebase {
 		this.auth = app.auth();
 	}
 
+	getUserId = () => {
+		if (this.auth.currentUser) {
+			return this.auth.currentUser.uid;
+		} else {
+			return null;
+		}
+	}
+
+	user_ref = () => {
+		const id = this.getUserId();
+		return this.db.ref(`users/${id}`);
+	}
+
 	courses = () => this.db.ref('course_list');
 
 	course_descriptions = () => this.db.ref('courses');
