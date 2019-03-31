@@ -19,11 +19,23 @@ class WorkAreaBase extends Component {
 		})
 		this.props.firebase.user_ref().on('value', snapshot => {
 			const userData = snapshot.val();
-			console.log(userData);
+			this.transformUserData(userData);
 			this.setState({
-				loading: false,
-				...userData
+				loading: false
 			});
+		})
+	}
+
+	transformUserData(data) {
+		const semesters = Object.keys(data.semesters).map(k => data.semesters[k]).sort(a => a.id);
+		semesters.forEach(semester => {
+			const courses = Object.keys(semester.courses).map(k => semester.courses[k]);
+			semester.courses = courses;
+			return courses;
+		});
+		console.log(semesters);
+		this.setState({
+			semesters: semesters
 		})
 	}
 
@@ -34,7 +46,7 @@ class WorkAreaBase extends Component {
 	render() {
 		return (
 			<>
-				<SemesterViewer semesesters={this.state.semesters} />
+				<SemesterViewer  semesters={this.state.semesters} />
 				<ControlBar />
 			</>
 		);
