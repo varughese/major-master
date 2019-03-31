@@ -3,7 +3,7 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 # Contributing (Read this)
-First make sure you have a Trello card assigned. You have to make a new branch before you can make changes. You should make a new branch that corresponds to this Trello card. Follow these in your command line. 
+First pick a GitHub card to do. (Projects tab > Major Master > Pick a card). You have to make a new branch before you can make changes. You should make a new branch that corresponds to this project card. Follow these in your command line. 
 
 ```
 git checkout -b name_of_your_branch
