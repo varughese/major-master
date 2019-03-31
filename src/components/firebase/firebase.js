@@ -20,8 +20,11 @@ class Firebase {
 	}
 
 	getUserId = () => {
+		const fromLocalStorage = JSON.parse(localStorage.getItem("authUser"));
 		if (this.auth.currentUser) {
 			return this.auth.currentUser.uid;
+		} else if (fromLocalStorage) {
+			return fromLocalStorage.uid;
 		} else {
 			return null;
 		}
@@ -36,8 +39,11 @@ class Firebase {
 
 	course_descriptions = () => this.db.ref('courses');
 
-	doSignInWithEmailAndPassword = (email, password) =>
-    this.auth.signInWithEmailAndPassword(email, password);
+	async doSignInWithEmailAndPassword(email, password) {
+		await this.auth.setPersistence(app.auth.Auth.Persistence.LOCAL); 
+		return this.auth.signInWithEmailAndPassword(email, password);
+	}
+    
 }
 
 export default Firebase;
