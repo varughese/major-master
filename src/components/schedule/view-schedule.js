@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import SemesterViewer from './semester-viewer';
-import { Row, Col } from 'reactstrap';
+// import { Row, Col } from 'reactstrap';
 
 class ViewSchedule extends Component {
 	constructor(props) {
