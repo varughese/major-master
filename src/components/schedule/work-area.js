@@ -21,7 +21,8 @@ class WorkAreaBase extends Component {
 			const userData = snapshot.val();
 			console.log(userData);
 			this.setState({
-				loading: false
+				loading: false,
+				...userData
 			});
 		})
 	}
@@ -33,7 +34,7 @@ class WorkAreaBase extends Component {
 	render() {
 		return (
 			<>
-				<SemesterViewer />
+				<SemesterViewer semesesters={this.state.semesters} />
 				<ControlBar />
 			</>
 		);
