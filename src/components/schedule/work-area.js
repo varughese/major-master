@@ -45,11 +45,17 @@ class WorkAreaBase extends Component {
 		this.props.firebase.user_ref().off();
 	}
 
+	addSemester(termcode, courses={}) {
+		const data = {};
+		data[termcode] = { courses: courses, id: termcode };
+		this.props.firebase.user_ref().child("semesters").update(data);
+	}
+
 	render() {
 		return (
 			<>
 				<SemesterViewer  semesters={this.state.semesters} />
-				<ControlBar />
+				<ControlBar addSemester={this.addSemester.bind(this)} />
 			</>
 		);
 	}
