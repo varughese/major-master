@@ -124,13 +124,8 @@ class SemesterViewer extends Component {
 			))
 		}
 		return (
-			<Row>
-				<Col>
-					<h4>Semester Viewer component</h4>
-					<Row className="semesters-holder">
-						{semestersElements}
-					</Row>
-				</Col>
+			<Row className="semesters-holder">
+				{semestersElements}
 			</Row>
 		);
 	}
