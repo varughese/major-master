@@ -4,20 +4,24 @@ import SemesterViewer from './semester-viewer';
 import ControlBar from './control-bar';
 import { withFirebase } from '../firebase';
 import termNamer from "../../constants/term-names";
+import SidePanel from "./side-panel";
+import { Col, Row } from "reactstrap";
 
 class WorkAreaBase extends Component {
 	constructor(props) {
 		super(props);
 		
 		this.state = {
-			semestersList: []
+			semestersList: [],
+			courses: []
 		};
 	}
 
-	componentDidMount() {
+	async componentDidMount() {
 		this.setState({
 			loading: true
 		})
+
 		this.props.firebase.user_ref().on('value', snapshot => {
 			const userData = snapshot.val();
 			const { semestersHash, semestersList } = this.transformSemesterHashToList(userData.semesters);
@@ -27,6 +31,12 @@ class WorkAreaBase extends Component {
 				semestersHash,
 				semestersList
 			});
+		});
+
+		// TOOO store this in local storage
+		const snapshot = await this.props.firebase.courses().once('value');
+		this.setState({
+			courses: snapshot.val()
 		})
 	}
 
@@ -80,10 +90,15 @@ class WorkAreaBase extends Component {
 
 	render() {
 		return (
-			<>
-				<SemesterViewer  semesters={this.state.semestersList} addCourse={this.addCourse.bind(this)} />
-				<ControlBar addSemester={this.addSemester.bind(this)} />
-			</>
+			<Row className="schedule-viewer-row">
+				<Col md="3" className="side-panel-holder">
+					<SidePanel courses={this.state.courses} />
+				</Col>
+				<Col md="9">
+					<SemesterViewer  semesters={this.state.semestersList} addCourse={this.addCourse.bind(this)} />
+					<ControlBar addSemester={this.addSemester.bind(this)} />
+				</Col>
+			</Row>
 		);
 	}
 }

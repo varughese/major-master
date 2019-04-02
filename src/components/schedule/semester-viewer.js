@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Row, Col, Button } from 'reactstrap';
 
+//eslint-disable-next-line
 class SemesterEditMode extends Component {
 	constructor(props) {
 		super(props);
@@ -16,6 +17,7 @@ class SemesterEditMode extends Component {
 		);
 	}
 }
+
 
 class SemesterViewMode extends Component {
 	constructor(props) {
