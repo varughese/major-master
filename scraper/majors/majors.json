@@ -1,0 +1,43 @@
+{
+	"CS": {
+		"link": "https://www.asundergrad.pitt.edu/sites/default/files/CS.pdf",
+		"requirements": {
+			"Core": {
+				"type": "list",
+				"data": ["CS401", "CS441", "CS445", "CS447", "CS449"]
+			},
+			"Upper Level": {
+				"type": "list",
+				"data": ["CS401", "CS441", "CS445", "CS447", "CS449"]
+			},
+			"Upper Level Elective": {
+				"type": "formula",
+				"data": {
+					"class_amount": 5,
+					"level": 1000
+				}
+			},
+			"Mathematics": [{
+				"type": "list",
+				"data": ["MATH220", "MATH230"]
+			}, {
+				"type": "one_of",
+				"data": ["STAT1000", "STAT1100", "STAT1151"]
+			}],
+			"Capstone": {
+				"type": "list",
+				"data": ["CS1900"]
+			},
+			"Requirements": [{
+				"type": "grade",
+				"data": "C"
+			}, {
+				"type": "gpa",
+				"data": 2.0
+			}, {
+				"type": "attribute",
+				"data": "writing"
+			}]
+		}
+	}
+}
