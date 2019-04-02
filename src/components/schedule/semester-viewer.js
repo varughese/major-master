@@ -18,7 +18,7 @@ class SemesterEditMode extends Component {
 	}
 }
 
-
+//eslint-disable-next-line
 class SemesterViewMode extends Component {
 	constructor(props) {
 		super(props);
@@ -35,6 +35,34 @@ class SemesterViewMode extends Component {
 	}	
 }
 
+class Course extends Component {
+	constructor(props) {
+		super(props);
+
+		this.state = {
+			isEditMode: props.isEditMode
+		};
+	}
+
+	render() {
+		const { id } = this.props;
+		return (
+			<div className="course-item">
+				<div className="course-item-title">{id}</div>
+				<div>
+					<Button 
+						color="danger" 
+						size="sm" 
+						onClick={() => this.props.removeCourse(id)}
+					>
+						X
+					</Button>
+				</div>
+			</div>
+		);
+	}
+}
+
 class Semester extends Component {
 	constructor(props) {
 		super(props);
@@ -46,10 +74,14 @@ class Semester extends Component {
 	addCourseToThisSemester = () => {
 		console.log(this.props.termcode);
 		this.props.addCourse(this.props.termcode, {
-			id: "CS1511",
+			id: "CS1" + Math.round(Math.random()*1000),
 			grade: "A",
 			status: "INPROG"
 		});
+	}
+
+	removeCourseFromThisSemeseter = (id) => {
+		this.props.removeCourse(this.props.termcode, { id });
 	}
 
 	render() {
@@ -62,9 +94,9 @@ class Semester extends Component {
 		return (
 			<Col className="semester-card" md="auto">
 				<div className="semester-title">{this.props.title}</div>
-				<ul>
-					{courses.map(course => <li key={course.id}>{course.id}</li>)}
-				</ul>
+				<div className="semester-course-list">
+					{courses.map(course => <Course key={course.id} {...course} removeCourse={this.removeCourseFromThisSemeseter} />)}
+				</div>
 				<Button onClick={this.addCourseToThisSemester}>Add Course</Button>
 			</Col>
 		);
@@ -87,6 +119,7 @@ class SemesterViewer extends Component {
 						  termcode={sem.id}
 						  title={sem.title} 
 						  addCourse={this.props.addCourse}
+						  removeCourse={this.props.removeCourse}
 				/>
 			))
 		}

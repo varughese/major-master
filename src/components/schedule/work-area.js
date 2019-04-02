@@ -88,6 +88,28 @@ class WorkAreaBase extends Component {
 		this.props.firebase.user_ref().child(`semesters/${termcode}/courses/${course.id}`).update(course);
 	}
 
+	removeCourse(termcode, course) {
+		if(!course.id) {
+			console.error("Course cannot be removed without an id");
+			return;
+		}
+		termcode = Number(termcode);
+		this.setState(prevState => {
+			const semesters = Object.assign({}, prevState.semestersHash); 
+			if(!semesters[termcode]) {
+				console.error("Semester", termcode, "not found in data");
+				return;
+			}
+			delete semesters[termcode].courses[course.id]
+			const { semesterHash, semestersList } = this.transformSemesterHashToList(semesters);
+			return {
+				semesterHash, 
+				semestersList
+			};
+		});
+		this.props.firebase.user_ref().child(`semesters/${termcode}/courses/${course.id}`).remove();
+	}
+
 	render() {
 		return (
 			<Row className="schedule-viewer-row">
@@ -95,7 +117,11 @@ class WorkAreaBase extends Component {
 					<SidePanel courses={this.state.courses} />
 				</Col>
 				<Col md="9">
-					<SemesterViewer  semesters={this.state.semestersList} addCourse={this.addCourse.bind(this)} />
+					<SemesterViewer  
+						semesters={this.state.semestersList} 
+						addCourse={this.addCourse.bind(this)} 
+						removeCourse={this.removeCourse.bind(this)}
+					/>
 					<ControlBar addSemester={this.addSemester.bind(this)} />
 				</Col>
 			</Row>
