@@ -10,7 +10,9 @@ class SearchCourses extends Component {
 	}
 
 	handleChange = (e) => {
-		this.setState({ searchString: e.target.value });
+		let value = e.target.value || "";
+		value = value.replace(/[^a-zA-Z\d\s:]/, '');
+		this.setState({ searchString: value });
 	}
 
 	render() {
@@ -20,7 +22,7 @@ class SearchCourses extends Component {
 		const searchString = this.state.searchString.trim().toLowerCase();
 		if (searchString.length > 0) {
 			courses = courses.filter((course) => {
-				return course && course.toLowerCase().match( searchString );
+				return course && course.toLowerCase().match(searchString);
 			});
 		}
 
@@ -31,10 +33,11 @@ class SearchCourses extends Component {
 					<FormGroup>
 						<Label for="search_input">Searcb</Label>
 						<Input name="search_input" 
-							   id="search_input" 
+							   id="search_input"
+							   type="text" 
 							   value={this.state.searchString}
 							   onChange={this.handleChange}
-							   placeholder="password placeholder" />
+							   placeholder="Search for courses..." />
 						<Button color="primary">Search</Button>
 					</FormGroup>
 				</Form>
