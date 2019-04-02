@@ -92,7 +92,7 @@ class Semester extends Component {
 			console.log(courses);
 		}
 		return (
-			<Col className="semester-card" md="auto">
+			<Col className="semester-card" md="2" sm="3">
 				<div className="semester-title">{this.props.title}</div>
 				<div className="semester-course-list">
 					{courses.map(course => <Course key={course.id} {...course} removeCourse={this.removeCourseFromThisSemeseter} />)}
