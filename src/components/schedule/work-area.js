@@ -10,7 +10,7 @@ class WorkAreaBase extends Component {
 		super(props);
 		
 		this.state = {
-			schedule: []
+			semestersList: []
 		};
 	}
 
@@ -20,25 +20,29 @@ class WorkAreaBase extends Component {
 		})
 		this.props.firebase.user_ref().on('value', snapshot => {
 			const userData = snapshot.val();
-			this.transformUserData(userData);
+			const { semestersHash, semestersList } = this.transformSemesterHashToList(userData.semesters);
+			console.log("Data recieved from database", semestersHash);
 			this.setState({
-				loading: false
+				loading: false,
+				semestersHash,
+				semestersList
 			});
 		})
 	}
 
-	transformUserData(data) {
-		const semesters = Object.keys(data.semesters || []).map(k => data.semesters[k]).sort(a => a.id);
-		semesters.forEach(semester => {
+	transformSemesterHashToList(data={}) {
+		const semesters = Object.keys(data).map(k => data[k]).sort(a => a.id);
+		const semestersList = semesters.map(semester => {
 			const courses = Object.keys(semester.courses || []).map(k => semester.courses[k]);
-			semester.courses = courses;
-			semester.title = termNamer(semester.id);
-			return courses;
+			const transformedSemester = { ...semester};
+			transformedSemester.courses = courses || [];
+			transformedSemester.title = termNamer(semester.id);
+			return transformedSemester;
 		});
-		console.log(semesters);
-		this.setState({
-			semesters: semesters
-		})
+		return {
+			semestersHash: data,
+			semestersList: semestersList
+		};
 	}
 
 	componentWillUnmount() {
@@ -51,10 +55,33 @@ class WorkAreaBase extends Component {
 		this.props.firebase.user_ref().child("semesters").update(data);
 	}
 
+	addCourse(termcode, course) {
+		if(!course.id) {
+			console.error("Course cannot be added without an id");
+			return;
+		}
+		termcode = Number(termcode);
+		this.setState(prevState => {
+			const semesters = Object.assign({}, prevState.semestersHash); 
+			if(!semesters[termcode]) {
+				console.error("Semester", termcode, "not found in data");
+				return;
+			}
+			if(!semesters[termcode].courses) semesters[termcode].courses = {};
+			semesters[termcode].courses[course.id] = course;
+			const { semesterHash, semestersList } = this.transformSemesterHashToList(semesters);
+			return {
+				semesterHash, 
+				semestersList
+			};
+		});
+		this.props.firebase.user_ref().child(`semesters/${termcode}/courses/${course.id}`).update(course);
+	}
+
 	render() {
 		return (
 			<>
-				<SemesterViewer  semesters={this.state.semesters} />
+				<SemesterViewer  semesters={this.state.semestersList} addCourse={this.addCourse.bind(this)} />
 				<ControlBar addSemester={this.addSemester.bind(this)} />
 			</>
 		);

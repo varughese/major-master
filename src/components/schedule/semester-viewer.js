@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Row, Col } from 'reactstrap';
+import { Row, Col, Button } from 'reactstrap';
 
 class SemesterEditMode extends Component {
 	constructor(props) {
@@ -41,6 +41,15 @@ class Semester extends Component {
 		};
 	}
 
+	addCourseToThisSemester = () => {
+		console.log(this.props.termcode);
+		this.props.addCourse(this.props.termcode, {
+			id: "CS1511",
+			grade: "A",
+			status: "INPROG"
+		});
+	}
+
 	render() {
 		const { courses } = this.props;
 		if (courses) {
@@ -54,6 +63,7 @@ class Semester extends Component {
 				<ul>
 					{courses.map(course => <li key={course.id}>{course.id}</li>)}
 				</ul>
+				<Button onClick={this.addCourseToThisSemester}>Add Course</Button>
 			</Col>
 		);
 	}
@@ -70,7 +80,12 @@ class SemesterViewer extends Component {
 		let semestersElements = <div>Loading</div>
 		if(semesters) {
 			semestersElements = semesters.map((sem) => (
-				<Semester key={sem.id} courses={sem.courses} title={sem.title} />
+				<Semester key={sem.id} 
+						  courses={sem.courses} 
+						  termcode={sem.id}
+						  title={sem.title} 
+						  addCourse={this.props.addCourse}
+				/>
 			))
 		}
 		return (
