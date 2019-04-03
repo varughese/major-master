@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { Input, Form, FormGroup, Button, Label } from 'reactstrap';
 import { DragSource } from 'react-dnd'
 
-function CourseItemSearchResultBase({ connectDragSource, isDragging, name }) {
-	return connectDragSource(<li>{name}</li>);
+function CourseItemSearchResultBase({ connectDragSource, isDragging, id, name }) {
+	return connectDragSource(<li>{id} - {name}</li>);
 }
 
 function collect(connect, monitor) {
@@ -25,27 +25,34 @@ class SearchCourses extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			searchString: ''
+			searchString: '',
+			matchedCourses: []
 		};
 	}
 
 	handleChange = (e) => {
 		let value = e.target.value || "";
 		value = value.replace(/[^a-zA-Z\d\s:]/, '');
-		this.setState({ searchString: value });
+		this.setState({ 
+			searchString: value,
+			matchedCourses: this.filterCourses(value)
+		});
+	}
+
+	filterCourses = (pattern) => {
+		const searchString = pattern.trim().toLowerCase();
+		const courses = this.props.courses || [];
+		if (searchString.length > 0) {
+			return courses.filter((course) => {
+				return (course.id+course.name).toLowerCase().match(searchString);
+			}).slice(0, 20);
+		}
+		return [];
 	}
 
 	render() {
 
-		let courses = this.props.courses;
-		console.log("list", this.props.courses);
-		const searchString = this.state.searchString.trim().toLowerCase();
-		if (searchString.length > 0) {
-			courses = courses.filter((course) => {
-				return course && course.toLowerCase().match(searchString);
-			});
-		}
-
+		let courses = this.state.matchedCourses;
 		return (
 			<div className="course-search-section">
 				<h4>Search Courses</h4>
@@ -63,7 +70,7 @@ class SearchCourses extends Component {
 				</Form>
 				<ul>
 				{ courses && 
-				courses.map((course, i) => <CourseItemSearchResult key={i} name={course}/>)
+				courses.map((course, i) => <CourseItemSearchResult key={i} {...course}/>)
 				}
 				</ul>
 			</div>
