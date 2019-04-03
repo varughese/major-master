@@ -93,7 +93,6 @@ class Semester extends Component {
 				<div className="semester-course-list">
 					{courses.map(course => <Course key={course.id} {...course} removeCourse={this.removeCourseFromThisSemester} />)}
 				</div>
-				<Button onClick={this.addCourseToThisSemester}>Add Course</Button>
 			</div>
 		);
 	}
