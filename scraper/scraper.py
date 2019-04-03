@@ -90,10 +90,10 @@ def main():
     test_subs = ["CS", "CHEM"]
 
     data = {}
-    for subject in test_subs :
-        data[subject] = scrape_subject_by_term("2201", subject, course)
+    # for subject in test_subs :
+    #     data[subject] = scrape_subject_by_term("2201", subject, course)
 
-    # test = scrape_subject_by_term("2201", "CS", course)
+    data["BIOSC"] = scrape_subject_by_term("2201", "BIOSC", course)
 
     to_write = json.dumps(data, default=serialize_course, sort_keys=True, indent=4)
     f = open("data.json","w")
