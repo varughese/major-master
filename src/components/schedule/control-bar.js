@@ -31,8 +31,8 @@ class ControlBar extends Component {
 					<ModalBody>
 						<Form>
 							<FormGroup>
-								<Label for="exampleEmail">Semester</Label>
-								<Input type="text" 
+								<Label for="semester_code">Semester</Label>
+								<Input type="number" 
 									   name="semester_code" 
 									   onChange={this.onChange}
 									   value={semester_code}
