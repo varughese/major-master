@@ -17,7 +17,7 @@ class WorkAreaBase extends Component {
 		};
 	}
 
-	async componentDidMount() {
+	async componentWillMount() {
 		this.setState({
 			loading: true
 		})

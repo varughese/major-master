@@ -1,5 +1,25 @@
 import React, { Component } from 'react';
 import { Input, Form, FormGroup, Button, Label } from 'reactstrap';
+import { DragSource } from 'react-dnd'
+
+function CourseItemSearchResultBase({ connectDragSource, isDragging, name }) {
+	return connectDragSource(<li>{name}</li>);
+}
+
+function collect(connect, monitor) {
+	return {
+		connectDragSource: connect.dragSource(),
+		isDragging: monitor.isDragging()
+	}
+}
+
+const courseItemSearchResultSource = {
+	beginDrag(props) {
+		return props;
+	}
+}
+
+const CourseItemSearchResult = DragSource("SEARCHITEM", courseItemSearchResultSource, collect)(CourseItemSearchResultBase);
 
 class SearchCourses extends Component {
 	constructor(props) {
@@ -43,7 +63,7 @@ class SearchCourses extends Component {
 				</Form>
 				<ul>
 				{ courses && 
-				courses.map((course, i) => <li key={i}>{course}</li>)
+				courses.map((course, i) => <CourseItemSearchResult key={i} name={course}/>)
 				}
 				</ul>
 			</div>
