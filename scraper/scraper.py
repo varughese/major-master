@@ -87,16 +87,16 @@ def load_obj(name):
         return pickle.load(f)
 
 def main():
-    test_subs = ["CS", "CHEM"]
+    # test_subs = ["CS"]
 
     data = {}
-    for subject in test_subs :
-        data[subject] = scrape_subject_by_term("2201", subject, course)
+    for subject in course.undergrad_subjects:
+        data[subject] = [course.__dict__ for course in scrape_subject_by_term("2201", subject, course)]
 
-    # test = scrape_subject_by_term("2201", "CS", course)
+    # data["BIOSC"] = scrape_subject_by_term("2201", "BIOSC", course)
 
     to_write = json.dumps(data, default=serialize_course, sort_keys=True, indent=4)
-    f = open("dict.json","w")
+    f = open("data.json","w")
     f.write(to_write)
     f.close()
 
