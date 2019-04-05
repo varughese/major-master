@@ -33,11 +33,25 @@ class WorkAreaBase extends Component {
 			});
 		});
 
+		this.fetchCourseListFromFirebase();
+	}
+
+	async fetchCourseListFromFirebase() {
 		// TOOO store this in local storage
-		const snapshot = await this.props.firebase.courses().once('value');
+		let coursesList = JSON.parse(localStorage.getItem("course_list"));
+		if (!coursesList) {
+			const snapshot = await this.props.firebase.courses().once('value');
+			coursesList = this.transformCourseListData(snapshot.val());
+			localStorage.setItem('course_list', JSON.stringify(coursesList));
+		}
 		this.setState({
-			courses: snapshot.val()
+			courses: coursesList
 		})
+	}
+
+	transformCourseListData(data) {
+		const d = Object.keys(data).map(k => data[k]);
+		return [].concat.apply([], d);
 	}
 
 	transformSemesterHashToList(data={}) {

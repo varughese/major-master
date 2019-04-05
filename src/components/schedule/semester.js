@@ -102,7 +102,7 @@ const semesterTarget = {
 	drop(props, monitor) {
 		const item = monitor.getItem();
 		props.addCourse(props.termcode, {
-			id: item.name,
+			id: item.id,
 			grade: "?",
 			status: "?"
 		});
