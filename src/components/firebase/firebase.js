@@ -19,6 +19,15 @@ class Firebase {
 		this.auth = app.auth();
 	}
 
+	getUser = () => {
+		if(this.auth.currentUser) {
+			return this.auth.currentUser;
+		} else {
+			console.warn("No user. Log in");
+			return null;
+		}
+	}
+
 	getUserId = () => {
 		const fromLocalStorage = JSON.parse(localStorage.getItem("authUser"));
 		if (this.auth.currentUser) {
@@ -28,6 +37,11 @@ class Firebase {
 		} else {
 			return null;
 		}
+	}
+
+	signOut = () => {
+		localStorage.removeItem("authUser")
+		this.auth.signOut();
 	}
 
 	user_ref = () => {
@@ -42,6 +56,10 @@ class Firebase {
 	async doSignInWithEmailAndPassword(email, password) {
 		await this.auth.setPersistence(app.auth.Auth.Persistence.LOCAL); 
 		return this.auth.signInWithEmailAndPassword(email, password);
+	}
+
+	async createUserWithEmailAndPassword(email, password) {
+		return this.auth.createUserWithEmailAndPassword(email, password);
 	}
     
 }

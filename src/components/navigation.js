@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import * as ROUTES from '../constants/routes';
-import firebase from "firebase/app";
-import "firebase/auth";
+import * as ROUTES from '../constants/routes'
+import { withFirebase } from "./firebase";
 import { Navbar, NavbarToggler, Collapse, Nav,
 	NavItem, UncontrolledDropdown, DropdownToggle,
 	DropdownMenu, DropdownItem, NavbarBrand } from 'reactstrap';
 
-class Navigation extends Component {
+class NavigationBase extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -28,12 +27,11 @@ class Navigation extends Component {
 	}
 	
 	signOut = () => {
-		firebase.auth().signOut();
+		this.props.firebase.signOut();
 	}
 
 	render() {
-		const user = firebase.auth().currentUser;
-		console.log(user);
+		const user = this.props.firebase.getUserId();
 		return (
 			<Navbar color="primary" dark expand="md">
 				<NavbarBrand href="/">Major Master</NavbarBrand>
@@ -68,9 +66,6 @@ class Navigation extends Component {
 								{user != null && (<>
 								<DropdownItem onClick ={this.signOut}>Sign Out</DropdownItem>
 								</>)}
-								<DropdownItem>Option 2</DropdownItem>
-								<DropdownItem divider />
-								<DropdownItem>Reset</DropdownItem>
 							</DropdownMenu>
 						</UncontrolledDropdown>
 					</Nav>
@@ -80,4 +75,4 @@ class Navigation extends Component {
 	}
 }
 
-export default Navigation;
+export default withFirebase(NavigationBase);

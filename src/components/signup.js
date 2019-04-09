@@ -1,98 +1,78 @@
 import React from "react";
 import {
-  Container,
-  Row,
   Col,
   Button,
-  Form,
   FormGroup,
-  FormFeedback,
   Label,
   Input,
-  FormText
 } from "reactstrap";
 
-import firebase from "firebase/app";
-import "firebase/auth";
+import { withFirebase } from './firebase';
 import * as ROUTES from "../constants/routes";
 
-export default class SignUp extends React.Component {
+class SignUpBase extends React.Component {
   constructor(props) {
     super(props);
-    this.firstPasswordCheck = "";
-    this.confirmPasswordCheck = "";
+    this.state = {
+      email: "",
+      password1: "",
+      password: "",
+      firstname: "",
+      lastname: "",
+      enrollterm: "",
+      majors: [],
+      validation: {
+        validEmail: ""
+      }
+    };
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  state = {
-    email: "",
-    password: "",
-	firstname: "",
-	lastname: "",
-	enrollterm: "",
-    majors: [],
-    validation: {
-      validEmail: ""
+  async handleSubmit(event) {
+    event.preventDefault();
+    if (this.state.password === this.state.password1) {
+      try {
+        await this.props.firebase.createUserWithEmailAndPassword(this.state.email, this.state.password)
+      } catch (e) {
+        this.setState({
+          errorMessage: e.message
+        });
+        return;
+      }
+      
+      const user = this.props.firebase.getUser();
+      user.sendEmailVerification();
+      const user_ref = this.props.firebase.user_ref();
+      user_ref.set({
+        'email': this.state.email,
+        'enrollment_term': this.state.enrollterm,
+        'first_name': this.state.firstname,
+        'last__name': this.state.lastname,
+        'id': user.uid,
+        'majors': '',
+        'semesters': {
+          [this.state.enrollterm]: {
+            id: this.state.enrollterm,
+            courses: {}
+          }
+        }
+      });
+
+      // this is janky lol, suppose to do similar to what
+      // kyle did with React Router
+      window.location.assign(ROUTES.HOME);
+    } else {
+      this.setState({
+        errorMessage: "Passwords do not match"
+      })
     }
   };
 
-  handleSubmit = event => {
-    event.preventDefault();
-    if (this.firstPasswordCheck === this.confirmPasswordCheck) {
-      this.setState(
-        {
-          password: this.confirmPasswordCheck
-        },
-        () => {
-          firebase
-            .auth()
-            .createUserWithEmailAndPassword(
-              this.state.email,
-              this.state.password
-            )
-            .then(result => {
-				var user = firebase.auth().currentUser;
-				user.sendEmailVerification();
-				var database = firebase.database();
-				var userList = database.ref('users');
-				var newUser = userList.push(user.uid);
-				newUser.set({
-					'email': this.state.email,
-					'enrollment_term': this.state.enrollterm,
-					'first_name': this.state.firstname,
-					'last__name': this.state.lastname,
-					'id': user.uid,
-					'majors': '',
-					'semesters': ''
-				});
-					
-              window.location.assign(ROUTES.HOME);
-            })
-            .catch(function(error) {
-              // Handle Errors here.
-              //this.couldNotAuth = true;
-              var errorCode = error.code;
-              var errorMessage = error.message;
-              console.log("errormessage: " + error.message);
-              //<Label>errorMessage</Label>;
-            });
-          //console.log(firebase.auth().currentUser);
-        }
-      );
-    } else console.log("no matching passwords");
-  }; //comment
-
   handleChange = event => {
     this.setState({
-      [event.target.name]: event.target.value
+      [event.target.name]: event.target.value,
+      errorMessage: ""
     });
-  };
-
-  handleChangeFirstPasswordCheck = event => {
-    this.firstPasswordCheck = event.target.value;
-  };
-
-  handleChangeConfirmPasswordCheck = event => {
-    this.confirmPasswordCheck = event.target.value;
   };
 
   checkEmail(e) {
@@ -107,6 +87,7 @@ export default class SignUp extends React.Component {
   }
 
   render() {
+    const { errorMessage } = this.state;
     return (
       <Col sm="12" md={{ size: 6, offset: 3 }}>
         <form onSubmit={this.handleSubmit}>
@@ -165,7 +146,7 @@ export default class SignUp extends React.Component {
               id="inputPassword1"
               placeholder="No spaces or special characters such as '!@#$%'"
               onChange={e => {
-                this.handleChangeFirstPasswordCheck(e);
+                this.handleChange(e);
               }}
             />
           </FormGroup>
@@ -177,13 +158,16 @@ export default class SignUp extends React.Component {
               id="inputPassword2"
               placeholder="Confirm password"
               onChange={e => {
-                this.handleChangeConfirmPasswordCheck(e);
+                this.handleChange(e);
               }}
             />
           </FormGroup>
+          <p>{errorMessage}</p>
           <Button type="submit">Create Account</Button>
         </form>
       </Col>
     );
   }
 }
+
+export default withFirebase(SignUpBase)
