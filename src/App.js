@@ -11,6 +11,7 @@ import {
   SignInPage
 } from './components';
 import Navigation from './components/navigation';
+import SignUp from './components/signup';
 import { withAuthentication } from './components/session'
 
 class App extends Component {
@@ -22,8 +23,8 @@ class App extends Component {
           <Container fluid>
               <Switch>
                 <Route path={ROUTES.HOME} component={Home}></Route>
-                <Route path={ROUTES.SIGN_UP}></Route>
-                <Route path={ROUTES.SIGN_IN} component={SignInPage}></Route>
+				<Route path={ROUTES.SIGN_UP} component ={SignUp}></Route>
+                <Route path={ROUTES.SIGN_IN} component ={SignInPage}></Route>
                 <Route path={ROUTES.EDIT_INFO}></Route>
                 <Route path={ROUTES.ENTER_CLASSES}></Route>
                 <Route path={ROUTES.VIEW_SCHEDULE} component={ViewSchedule}></Route>
