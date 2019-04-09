@@ -274,11 +274,11 @@ class PittSection:
         if 'Enrollment Requirements' in data[5].text:
             self._extra['preq'] = ''
             
-            try:
-                self._extra['preq'] = self.__extract_data_past_colon(self.__extract_data_from_div_section(data[5]))
-            except Exception as error:
-                print("caught no colon on " + self.parent_subject.subject + self.parent_course.number)
-                self._extra['preq'] = self.__extract_data_from_div_section(data[5])
+            # try:
+            #     self._extra['preq'] = self.__extract_data_past_colon(self.__extract_data_from_div_section(data[5]))
+            # except Exception as error:
+            #     print("caught no colon on " + self.parent_subject.subject + self.parent_course.number)
+            self._extra['preq'] = self.__extract_data_from_div_section(data[5])
 
             if 'Class Attributes' in data[6].text:
                 self._extra['class_attributes'] = self.__extract_data_from_div_section(data[6]).split('\n')
