@@ -44,4 +44,5 @@ def parseCourseDescriptions():
                 }
                 ref.set(temp)
 
+parseCourseList()
 parseCourseDescriptions()
