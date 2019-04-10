@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input } from 'reactstrap';
 
+
 class ControlBar extends Component {
 	constructor(props) {
 		super(props);
@@ -25,6 +26,9 @@ class ControlBar extends Component {
 		return (
 			<div className="control-bar">
 				<Button color="primary" onClick={this.toggle}>Add Semester</Button>
+				<Button color="primary" onClick={() => {
+							this.props.exportPDF()
+						}}>Export to PDF</Button>
 				<Button color="primary">Edit my info</Button>
 				<Modal isOpen={this.state.modal} toggle={this.toggle}>
 					<ModalHeader toggle={this.toggle}>Add Semester</ModalHeader>

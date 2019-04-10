@@ -6,6 +6,8 @@ import { withFirebase } from '../firebase';
 import termNamer from "../../constants/term-names";
 import SidePanel from "./side-panel";
 import { Col, Row } from "reactstrap";
+import * as jsPDF from 'jspdf'
+
 
 class WorkAreaBase extends Component {
 	constructor(props) {
@@ -73,6 +75,13 @@ class WorkAreaBase extends Component {
 		this.props.firebase.user_ref().off();
 	}
 
+	exportPDF(){
+		var doc = new jsPDF();
+		this.props.firebase.user_ref();
+		doc.text('pdf gang', 10, 10);
+		doc.save('test.pdf');
+	}
+
 	addSemester(termcode, courses={}) {
 		const data = {};
 		data[termcode] = { courses: courses, id: termcode };
@@ -136,7 +145,10 @@ class WorkAreaBase extends Component {
 						addCourse={this.addCourse.bind(this)} 
 						removeCourse={this.removeCourse.bind(this)}
 					/>
-					<ControlBar addSemester={this.addSemester.bind(this)} />
+					<ControlBar 
+						addSemester={this.addSemester.bind(this)}
+						exportPDF={this.exportPDF.bind(this)}
+					 />
 				</Col>
 			</Row>
 		);
