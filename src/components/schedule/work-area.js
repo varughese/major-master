@@ -30,6 +30,7 @@ class WorkAreaBase extends Component {
 			console.log("Data recieved from database", semestersHash);
 			this.setState({
 				loading: false,
+				userData,
 				semestersHash,
 				semestersList
 			});
@@ -76,9 +77,18 @@ class WorkAreaBase extends Component {
 	}
 
 	exportPDF(){
+		var firstName = this.state.userData.first_name;
+		var lastName = this.state.userData.last__name;
+		console.log(this.state);
+		var data = this.state.semestersHash;
+
+		// for (var key in dictionary){
+		// 	if()
+		// }
+
 		var doc = new jsPDF();
-		this.props.firebase.user_ref();
-		doc.text('pdf gang', 10, 10);
+		doc.text(firstName + " " + lastName + "'s Plan", 20, 20);
+
 		doc.save('test.pdf');
 	}
 
