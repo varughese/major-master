@@ -14,7 +14,7 @@ class SignUpBase extends React.Component {
       firstname: "",
       lastname: "",
       enrollterm: "",
-      major1: "",
+      major: "",
       validation: {
         validEmail: ""
       }
@@ -281,7 +281,7 @@ class SignUpBase extends React.Component {
         first_name: this.state.firstname,
         last__name: this.state.lastname,
         id: user.uid,
-        major1: this.state.major1,
+        major: this.state.major,
         semesters: {
           [this.state.enrollterm]: {
             id: this.state.enrollterm,
@@ -298,7 +298,7 @@ class SignUpBase extends React.Component {
 
   handleMajorSelect = event => {
     this.setState(
-      { major1: event.target.value }
+      { major: event.target.value }
       //, () => console.log(this.state.major1)
     );
   };
