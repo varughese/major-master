@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Button } from 'reactstrap';
-import { DropTarget } from 'react-dnd'
+import { DropTarget, DragSource } from 'react-dnd'
 
 //eslint-disable-next-line
 class SemesterEditMode extends Component {
@@ -36,7 +36,7 @@ class SemesterViewMode extends Component {
 	}	
 }
 
-class Course extends Component {
+class CourseBase extends Component {
 	constructor(props) {
 		super(props);
 
@@ -47,7 +47,8 @@ class Course extends Component {
 
 	render() {
 		const { id } = this.props;
-		return (
+		
+		return this.props.connectDragSource(
 			<div className="course-item">
 				<div className="course-item-title">{id}</div>
 				<div>
@@ -63,6 +64,19 @@ class Course extends Component {
 		);
 	}
 }
+
+function courseCollect(connect, monitor) {
+	return {
+		connectDragSource: connect.dragSource(),
+		isDragging: monitor.isDragging()		
+	}
+}
+
+const Course = DragSource("COURSE", {
+	beginDrag(props) {
+		return {removeMe: true, ...props};
+	}
+}, courseCollect)(CourseBase);
 
 class Semester extends Component {
 	constructor(props) {
@@ -91,7 +105,7 @@ class Semester extends Component {
 			<div className="semester-card col-md-2 col-sm-3">
 				<div className="semester-title">{this.props.title}</div>
 				<div className="semester-course-list">
-					{courses.map(course => <Course key={course.id} {...course} removeCourse={this.removeCourseFromThisSemester} />)}
+					{courses.map(course => <Course key={course.id} termcode={this.props.termcode} {...course} removeCourse={this.removeCourseFromThisSemester} />)}
 				</div>
 			</div>
 		);
@@ -101,6 +115,14 @@ class Semester extends Component {
 const semesterTarget = {
 	drop(props, monitor) {
 		const item = monitor.getItem();
+		if(item.removeMe) {
+			props.removeCourse(item.termcode, {
+				id: item.id,
+				grade: "?",
+				status: "?"
+			});
+		}
+		console.log(item);
 		props.addCourse(props.termcode, {
 			id: item.id,
 			grade: "?",
@@ -116,4 +138,4 @@ function collect(connect, monitor) {
 	}
 }
 
-export default DropTarget("SEARCHITEM", semesterTarget, collect)(Semester);
+export default DropTarget("COURSE", semesterTarget, collect)(Semester);
