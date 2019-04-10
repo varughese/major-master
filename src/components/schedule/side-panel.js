@@ -12,7 +12,7 @@ class SidePanel extends Component {
 	render() {
 		return (
 			<>
-				<SearchCourses courses={this.props.courses} />
+				<SearchCourses course_list={this.props.course_list} />
 				<RequirementViewer />
 			</>
 		);
