@@ -292,7 +292,7 @@ class SignUpBase extends React.Component {
 
       // this is janky lol, suppose to do similar to what
       // kyle did with React Router
-      window.location.assign(ROUTES.HOME);
+      window.location.assign(ROUTES.LANDING);
     }
   }
 
