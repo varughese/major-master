@@ -1,22 +1,22 @@
-import React, { Component } from 'react';
-import { withRouter } from 'react-router-dom';
-import { compose } from 'recompose';
+import React, { Component } from "react";
+import { withRouter, Link } from "react-router-dom";
+import { compose } from "recompose";
+import { Col, Row, Button, FormGroup, Label, Input } from "reactstrap";
 
 // import { SignUpLink } from '../SignUp';
-import { withFirebase } from '../firebase';
-import * as ROUTES from '../../constants/routes';
+import { withFirebase } from "../firebase";
+import * as ROUTES from "../../constants/routes";
 
 const SignInPage = () => (
-  <div>
-    <h1>SignIn</h1>
+  <FormGroup>
     <SignInForm />
-  </div>
+  </FormGroup>
 );
 
 const INITIAL_STATE = {
-  email: '',
-  password: '',
-  error: null,
+  email: "",
+  password: "",
+  error: null
 };
 
 class SignInFormBase extends Component {
@@ -50,37 +50,54 @@ class SignInFormBase extends Component {
   render() {
     const { email, password, error } = this.state;
 
-    const isInvalid = password === '' || email === '';
+    const isInvalid = password === "" || email === "";
 
     return (
-      <form onSubmit={this.onSubmit}>
-        <input
-          name="email"
-          value={email}
-          onChange={this.onChange}
-          type="text"
-          placeholder="Email Address"
-        />
-        <input
-          name="password"
-          value={password}
-          onChange={this.onChange}
-          type="password"
-          placeholder="Password"
-        />
-        <button disabled={isInvalid} type="submit">
-          Sign In
-        </button>
+      <Col sm="12" md={{ size: 6, offset: 3 }}>
+        <h2>Sign in</h2>
+        <form onSubmit={this.onSubmit}>
+          <FormGroup>
+            <Input
+              name="email"
+              value={email}
+              onChange={this.onChange}
+              type="text"
+              placeholder="Email Address"
+            />
+          </FormGroup>
+          <FormGroup>
+            <Input
+              name="password"
+              value={password}
+              onChange={this.onChange}
+              type="password"
+              placeholder="Password"
+            />
+          </FormGroup>
+          <Row>
+            <Col sm="3">
+              <Button disabled={isInvalid} type="submit">
+                Sign In
+              </Button>
+            </Col>
+            <Col sm="9">
+              <p className="text-right">
+                Don't have an account? Sign up{" "}
+                <Link to={ROUTES.SIGN_UP}>here.</Link>
+              </p>
+            </Col>
+          </Row>
 
-        {error && <p>{error.message}</p>}
-      </form>
+          {error && <p>{error.message}</p>}
+        </form>
+      </Col>
     );
   }
 }
 
 const SignInForm = compose(
   withRouter,
-  withFirebase,
+  withFirebase
 )(SignInFormBase);
 
 export default SignInPage;
