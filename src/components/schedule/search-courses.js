@@ -19,7 +19,7 @@ const courseItemSearchResultSource = {
 	}
 }
 
-const CourseItemSearchResult = DragSource("SEARCHITEM", courseItemSearchResultSource, collect)(CourseItemSearchResultBase);
+const CourseItemSearchResult = DragSource("COURSE", courseItemSearchResultSource, collect)(CourseItemSearchResultBase);
 
 class SearchCourses extends Component {
 	constructor(props) {
