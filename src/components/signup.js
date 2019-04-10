@@ -414,7 +414,7 @@ class SignUpBase extends React.Component {
             </Input>
           </FormGroup>
 
-          <FormGroup>
+          {/*<FormGroup>
             <Label for="major2Select">Select Second Major (optional)</Label>
             <Input
               type="select"
@@ -444,7 +444,7 @@ class SignUpBase extends React.Component {
                 <option key={major}>{major}</option>
               ))}
             </Input>
-          </FormGroup>
+              </FormGroup>*/}
 
           <p>{errorMessage}</p>
           <Button type="submit">Create Account</Button>
