@@ -15,4 +15,3 @@ ReactDOM.render(
 		</DragDropContextProvider>
 	</FirebaseContext.Provider>
 ,  document.getElementById('root'));
-	

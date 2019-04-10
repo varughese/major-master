@@ -8,7 +8,8 @@ import {
   EditSchedule,
   ViewSchedule,
   Home,
-  SignInPage
+  SignInPage,
+  GpaCalc
 } from './components';
 import Navigation from './components/navigation';
 import SignUp from './components/signup';
@@ -29,7 +30,7 @@ class App extends Component {
                 <Route path={ROUTES.ENTER_CLASSES}></Route>
                 <Route path={ROUTES.VIEW_SCHEDULE} component={ViewSchedule}></Route>
                 <Route path={ROUTES.EDIT_SCHEDULE} component={EditSchedule}></Route>
-                <Route path={ROUTES.GPA_CALC}></Route>
+                <Route path={ROUTES.GPA_CALC} component={GpaCalc}></Route>
                 <Route path="/testbootstrap" component={BootstrapExample}></Route>
               </Switch>
           </Container>
