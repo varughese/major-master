@@ -39,6 +39,10 @@ class Firebase {
 		}
 	}
 
+	isAuthenticated = () => {
+		return this.getUserId() != null;
+	}
+
 	signOut = () => {
 		localStorage.removeItem("authUser")
 		this.auth.signOut();
