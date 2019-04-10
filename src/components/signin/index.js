@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { withRouter, Link } from "react-router-dom";
 import { compose } from "recompose";
-import { Col, Row, Button, FormGroup, Label, Input } from "reactstrap";
+import { Col, Row, Button, FormGroup, Input } from "reactstrap";
 
 // import { SignUpLink } from '../SignUp';
 import { withFirebase } from "../firebase";
@@ -35,7 +35,7 @@ class SignInFormBase extends Component {
       .doSignInWithEmailAndPassword(email, password)
       .then(() => {
         this.setState({ ...INITIAL_STATE });
-        this.props.history.push(ROUTES.HOME);
+        this.props.history.push(ROUTES.LANDING);
       })
       .catch(error => {
         this.setState({ error });
