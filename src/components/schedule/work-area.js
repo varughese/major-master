@@ -15,7 +15,7 @@ class WorkAreaBase extends Component {
 		
 		this.state = {
 			semestersList: [],
-			courses: []
+			course_list: []
 		};
 	}
 
@@ -48,7 +48,7 @@ class WorkAreaBase extends Component {
 			localStorage.setItem('course_list', JSON.stringify(coursesList));
 		}
 		this.setState({
-			courses: coursesList
+			course_list: coursesList
 		})
 	}
 
@@ -147,7 +147,7 @@ class WorkAreaBase extends Component {
 		return (
 			<Row className="schedule-viewer-row">
 				<Col md="3" className="side-panel-holder">
-					<SidePanel courses={this.state.courses} />
+					<SidePanel course_list={this.state.course_list} />
 				</Col>
 				<Col md="9">
 					<SemesterViewer  
