@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 // import { withRouter } from 'react-router-dom';
 // import { compose } from 'recompose';
-import { FormGroup } from 'reactstrap';
+import { FormGroup, Label, Input } from 'reactstrap';
 import { withFirebase } from '../firebase';
 // import * as ROUTES from '../../constants/routes';
 

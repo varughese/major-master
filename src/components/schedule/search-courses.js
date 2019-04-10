@@ -41,7 +41,7 @@ class SearchCourses extends Component {
 
 	filterCourses = (pattern) => {
 		const searchString = pattern.trim().toLowerCase();
-		const courses = this.props.courses || [];
+		const courses = this.props.course_list || [];
 		if (searchString.length > 0) {
 			return courses.filter((course) => {
 				return (course.id+course.name).toLowerCase().match(searchString);
