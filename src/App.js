@@ -12,6 +12,7 @@ import {
   BootstrapExample,
   EditSchedule,
   ViewSchedule,
+  GpaCalc,
   SignInPage
 } from "./components";
 import Navigation from "./components/navigation";
@@ -40,7 +41,7 @@ class App extends Component {
               <Route path={ROUTES.ENTER_CLASSES} />
               <Route path={ROUTES.VIEW_SCHEDULE} component={ViewSchedule} />
               <Route path={ROUTES.EDIT_SCHEDULE} component={EditSchedule} />
-              <Route path={ROUTES.GPA_CALC} />
+              <Route path={ROUTES.GPA_CALC} component={GpaCalc} />
               <Route path="/testbootstrap" component={BootstrapExample} />
             </Switch>
           </Container>
