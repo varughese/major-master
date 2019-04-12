@@ -9,9 +9,6 @@
 
     return clone;
   }
-
-  // TODO: go over exceptions in out.txt to see what to handle,
-  //  disregard as much as possible, and manually edit remainder
 }
 
 start
