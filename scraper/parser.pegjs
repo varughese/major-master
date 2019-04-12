@@ -22,10 +22,10 @@ expr
     const aHasOr = a.hasOwnProperty('or');
     if(eHasOr) {
       if(aHasOr) {
-        e.or.unshift(...a.or);
-      } else {
-        e.or.unshift(a);
+        a.or.push(...e.or);
+        return a;
       }
+      e.or.unshift(a);
       return e;
     }
     if(aHasOr) {
@@ -40,6 +40,10 @@ and
   = ts:terms _? 'and'i _? a:and
   {
     if(a.hasOwnProperty('and')) {
+      if(ts.hasOwnProperty('and')) {
+        ts.and.push(...a.and);
+        return ts;
+      }
       a.and.unshift(ts);
       return a;
     }
