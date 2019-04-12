@@ -1,0 +1,167 @@
+#!/usr/bin/env node
+
+const fs = require('fs');
+const readline = require('readline');
+const { parse } = require('./parser');
+const yargs = require('yargs').scriptName('prereq-cli');
+
+// promisify callbacks
+const readFile = (path, encoding='utf-8') => new Promise((resolve, reject) => {
+	fs.readFile(path, encoding, (err, data) => err ? reject(err) : resolve(data));
+});
+const writeFile = (path, data) => new Promise((resolve, reject) => {
+	fs.writeFile(path, data, (err) => err ? reject(err) : resolve());
+});
+const ask = (rl, query) => new Promise(resolve => rl.question(query, resolve));
+
+// setup options
+const { argv } = yargs
+	.usage(
+		'Usage: $0 input_file [-o output_file] [-fsu]\n'
+		+ '  output_file defaults to "out.json"'
+	)
+	.example(
+		'$0 data.json -o courses.json -s 2',
+		'Read course data from data.json, parse, and store in courses.json'
+		+ ' with indentation of 2'
+	)
+	.example(
+		'$0 courses.json -fu',
+		'Read course data from courses.json, parse, allow user to fix errors,'
+		+ ' and update courses.json'
+	)
+	.options({
+		'f': {
+			alias: 'fix-errors',
+			description: 'Allow user to tweak prereq strings for reparsing',
+			type: 'boolean'
+		},
+		'o': {
+			description: 'Specify output_file',
+			requiresArg: true,
+			type: 'string'
+		},
+		's': {
+			alias: 'spaces',
+			description: 'Number of spaces to use as white space',
+			requiresArg: true,
+			type: 'number'
+		},
+		'u': {
+			alias: 'update',
+			default: undefined,
+			description: 'Set output_file to input_file',
+			type: 'boolean'
+		}
+	})
+	.alias('h', 'help')
+	.conflicts('o', 'u')
+	.demandCommand(1, 1, 'You must provide an input_file to parse')
+	.showHelpOnFail(false, 'Specify --help for available options')
+	.version(false)
+	.strict();
+
+// read command line args
+const [ pathIn ] = argv._;
+const { fixErrors, spaces } = argv;
+const pathOut = argv.update ? pathIn : argv.o || 'out.json';
+
+parsePrereqs({ pathIn, pathOut, fixErrors, spaces })
+	.catch(({ message }) => {
+		console.error(message);
+		process.exit(1);
+	});
+
+// read pathIn, parse prereqs, write pathOut, possible user intervention
+async function parsePrereqs({ pathIn, pathOut, fixErrors }) {
+  const data = await readFile(pathIn);
+  console.log(`${pathIn} read successfully`);
+	console.log();
+
+	let errCount = 0;
+  const courses = JSON.parse(data, (key, value) => {
+		const result = coursesReviver(key, value);
+		if(key == 'prereq'
+			&& result != null
+			&& result.text.length > 0
+			&& result.tree == null
+		) {
+			errCount++;
+		}
+		return result;
+	});
+
+	if(errCount > 0) {
+		console.warn(`${errCount} prereq(s) failed to parse`);
+		console.warn();
+	}
+
+	if(fixErrors) {
+		errCount = await fixCourses(courses);
+		console.log();
+		if(errCount > 0) {
+		  console.warn(`${errCount} prereq(s) still unparsed`);
+			console.warn();
+		}
+	}
+
+  await writeFile(pathOut, JSON.stringify(courses, null, spaces));
+  console.log(`${pathOut} written successfully`);
+}
+
+// parse incoming prereqs
+function coursesReviver(key, value) {
+  if(key != 'prereq') return value;
+	if(value == null) return null;
+	if(value.tree != null) return value;
+
+	const text = Array.isArray(value) ? value[0] || '' : value.text;
+  if(!text) return null;
+
+  try {
+    const tree = parse(text);
+    return { text, tree };
+  } catch(err) {
+    return { text, tree: null };
+  }
+}
+
+// let user tweak text for parser
+async function fixCourses(courses) {
+	const rl = readline.createInterface({
+		input: process.stdin,
+		output: process.stdout
+	});
+
+	console.log('Fix the following prerequisites:');
+	console.log('(type .exit to finish, empty line to ignore):');
+	console.log();
+
+	let unclean = 0;
+	let abort = false;
+  for(const key in courses) {
+    const dept = courses[key];
+    for(const { id, prereq } of dept) {
+      if(prereq == null) continue;
+      if(prereq.text.length == 0 || prereq.tree != null) continue;
+			unclean++;
+
+			if(abort) continue;
+			const query = `Fix ${id}: ${JSON.stringify(prereq.text)}\n> `;
+      const change = await ask(rl, query);
+      if(!change) continue;
+
+			if(/^\.exit\b/.test(change)) abort = true;
+
+      try {
+        prereq.tree = parse(change);
+				unclean--;
+      } catch(e) {
+				continue;
+			}
+    }
+  }
+
+	rl.close();
+	return unclean;
+}
