@@ -137,25 +137,28 @@ async function fixCourses(courses) {
   console.log('(type .exit to finish, empty line to ignore):');
   console.log();
 
-  let unclean = 0;
+  let errCount = 0;
   let abort = false;
   for(const key in courses) {
     const dept = courses[key];
     for(const { id, prereq } of dept) {
       if(prereq == null) continue;
       if(prereq.text.length == 0 || prereq.tree != null) continue;
-      unclean++;
+      errCount++;
 
       if(abort) continue;
       const query = `Fix ${id}: ${JSON.stringify(prereq.text)}\n> `;
       const change = await ask(rl, query);
       if(!change) continue;
 
-      if(/^\.exit\b/.test(change)) abort = true;
+      if(/^\.exit\b/.test(change)) {
+				abort = true;
+				continue;
+			}
 
       try {
         prereq.tree = parse(change);
-        unclean--;
+        errCount--;
       } catch(e) {
         continue;
       }
@@ -163,5 +166,5 @@ async function fixCourses(courses) {
   }
 
   rl.close();
-  return unclean;
+  return errCount;
 }
