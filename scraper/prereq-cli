@@ -73,7 +73,7 @@ parsePrereqs({ pathIn, pathOut, fixErrors, spaces })
   });
 
 // read pathIn, parse prereqs, write pathOut, possible user intervention
-async function parsePrereqs({ pathIn, pathOut, fixErrors }) {
+async function parsePrereqs({ pathIn, pathOut, fixErrors, spaces }) {
   const data = await readFile(pathIn);
   console.log(`${pathIn} read successfully`);
   console.log();
