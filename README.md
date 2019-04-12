@@ -80,7 +80,7 @@ The following command will parse the prerequisites from `data.json` and write
 them back to `out.json` with no indentation.
 
 ```
-$ ./prereq-cli data.json -s 0
+$ ./prereq-cli data.json
 ```
 
 This next command will parse the prerequisites from `out.json`, allow the
@@ -88,7 +88,7 @@ user to tweak the entries that failed to parse, and write them back to
 `courses.json` with an indentation of 2 spaces.
 
 ```
-$ ./prereq-cli out.json -o courses.json -f
+$ ./prereq-cli out.json -o courses.json -s 2 -f
 ```
 
 When the tool prompts the user to fix some unparsed text, they can either enter
@@ -120,7 +120,7 @@ The `-o` flag comes before the output file name.  The default output file is
 `out.json`.  This flag conflicts with `-u`.
 
 The `-s` flag is short for `--spaces`, which specifies the amount of whitespace
-to pad the JSON output with.  The default value is `2`.  When `0` is specified,
+to pad the JSON output with.  The default value is `0`.  When `0` is specified,
 the JSON will not be indented.  This makes the JSON file smaller, but editors
 will struggle to load the file without any `'\n'` characters.
 
