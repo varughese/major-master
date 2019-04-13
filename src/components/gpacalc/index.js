@@ -53,6 +53,26 @@ class GpaCalcBase extends Component {
 
 	}
 
+	handleCourseStatus = (event, course) => {
+		const key = course.key;
+		const newStatus = event.target.value;
+		const term = course.term;
+
+		const newCourses = this.state.courses.slice();
+		newCourses.map(course => {
+			if(course.key === key) {
+				course.status = newStatus;
+			}
+			return course;
+		});
+
+		const course_ref = this.props.firebase.user_ref().child("semesters").child(term).child("courses").child(course.id);
+		course_ref.update({status: newStatus});
+		this.setState({
+			courses: newCourses
+		});
+	}
+
 	handleGradeSelect = (event, course) => {
 		const key = course.key;
 		const newGrade = event.target.value;
@@ -119,7 +139,7 @@ class GpaCalcBase extends Component {
 							type="select"
 							name="status"
 							value={course.status}
-							onChange={e => {this.handleStatus(e, course)}}
+							onChange={e => {this.handleCourseStatus(e, course)}}
 							>
 							<option value="COMPLETED">Completed this class</option>
 							<option value="INPROG">In Progress</option>
