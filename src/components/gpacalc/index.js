@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 // import { withRouter } from 'react-router-dom';
 // import { compose } from 'recompose';
-import { Button, FormGroup, Label, Input } from 'reactstrap';
+import { Button, Input, InputGroup, Table, InputGroupAddon, FormGroup, Label } from 'reactstrap';
 import { withFirebase } from '../firebase';
 import termNamer from "../../constants/term-names";
 // import * as ROUTES from '../../constants/routes';
@@ -40,48 +40,60 @@ class GpaCalcBase extends Component {
 		let totalPoints = 0;
 		let totalCredits = 0;
 		courses.forEach(function(course) {
-			//iterate through grades
-				//add up grade points
-				if(self.points[course.grade] !== -1){
-					totalPoints += self.points[course.grade] * creditsPerCourse;
-					totalCredits += creditsPerCourse;
-				}
+			if(self.points[course.grade] !== -1){
+				totalPoints += self.points[course.grade] * creditsPerCourse;
+				totalCredits += creditsPerCourse;
+			}
 		});
+		const GPA = totalPoints / totalCredits;
 		this.setState({
 			totalPoints,
-			totalCredits
+			totalCredits,
+			GPA
 		})
 
 	}
 
 	handleGradeSelect = (event, course) => {
-		// this.speculatedGrades[course] = event.target.value;
-
-		// var totalCredits = 0;
-		// var totalPoints = 0;
-
-		// for (const [course, grade] of Object.entries(this.speculatedGrades)) {
-		// 	totalCredits += 3;
-		// 	totalPoints += this.points[grade] * 3;
-		// }
-
-		// this.setState({
-		// 	semesterGPA: totalPoints/totalCredits,
-		// 	newGPA: (this.totalPoints + totalPoints)/(this.totalCredits + totalCredits)
-		// });
+		const key = course.key;
+		const newGrade = event.target.value;
+		
+		const newCourses = this.state.courses.slice();
+		newCourses.map(course => {
+			if(course.key === key) {
+				course.grade = newGrade;
+			}
+			return course;
+		});
+		this.calculateGPA(newCourses);
+		this.setState({
+			courses: newCourses
+		});
   };
 
   async componentDidMount() {
 		const snapshot = await this.props.firebase.user_ref().child("semesters").once('value');
 		const semesters = snapshot.val();
 
-		const course_list = Object.keys(semesters).map(k => {
-			const course_per_sem = semesters[k].courses || []
+		const course_list = Object.keys(semesters)
+		.map(term => {
+			const course_per_sem = semesters[term].courses || []
 			return Object.keys(course_per_sem)
-				.map(k => ({term: k, ...course_per_sem[k] }));
-		}).filter(x => (x && x.length > 0)).sort((a, b) => a.termCode < b.termCode);
+				.map(k => ({term: term, ...course_per_sem[k] }));
+		})
+		.filter(x => (x && x.length > 0))
+		.sort((a, b) => a.termCode < b.termCode);
 
-		const courses = [].concat.apply([], course_list);
+		for(let i=1; i<course_list.length; i++) {
+			if(course_list[i].term !== course_list[i-1].term) {
+				course_list[i].termDivider = true;
+			}
+		}
+
+		const courses = [].concat.apply([], course_list).map(c => ({
+			...c,
+			key: c.id + "" + c.term
+		}));
 
 
 		this.calculateGPA(courses);
@@ -95,22 +107,23 @@ class GpaCalcBase extends Component {
 		const courses = this.state.courses || [];
 		const courseSelections = courses.map( (course, i) => {
 			return(
-				<FormGroup key={course.id + i}>
-					<Label for={course.id}>{course.id}</Label>
-
-					<Input
-						type="select"
-						name="select"
-						id={course.id}
-						onChange={e => {this.handleGradeSelect(e, course)}}
-						>
-						{Object.keys(this.points).map(grade => (
-							<option key={course+grade}>{grade}</option>
-						))}
-					</Input>
-
-				</FormGroup>
-	
+				<tr key={course.key}>
+					<td>{termNamer(course.term)}</td>
+					<td>{course.id}</td>
+					<td>
+						<Input
+							type="select"
+							name="select"
+							value={course.grade}
+							id={course.id}
+							onChange={e => {this.handleGradeSelect(e, course)}}
+							>
+							{Object.keys(this.points).map(grade => (
+								<option key={grade}>{grade}</option>
+							))}
+						</Input>
+					</td>
+				</tr>
 			)
 		})
 		
@@ -119,18 +132,22 @@ class GpaCalcBase extends Component {
 		const newGPA = this.state.newGPA;
 
 		return (
-			<form>
-				
+			<div>	
 				<h1>GPA: {GPA}</h1>
-				<br></br>
 				<h3>Enter Expected Grades</h3>
-				<br></br>
-				{courseSelections}
-		
-				<h4>Expected Semester GPA: {semesterGPA}</h4>
-				<h3>Expected New GPA: {newGPA}</h3>
-
-			</form>
+				<Table>
+					<thead>
+						<tr>
+							<th>Term</th>
+							<th>Class</th>
+							<th>Grade</th>
+						</tr>
+					</thead>
+					<tbody>
+						{courseSelections}
+					</tbody>
+				</Table>
+			</div>
 		);
 	}
 }
