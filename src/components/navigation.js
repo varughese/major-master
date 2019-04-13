@@ -81,6 +81,11 @@ class NavigationBase extends Component {
                     View Schedule
                   </Link>
                 </NavItem>
+                <NavItem onClick={this.closeCollapsed}>
+                  <Link className="nav-link" to={ROUTES.GPA_CALC}>
+                    Calculate GPA
+                  </Link>
+                </NavItem>
               </>
             )}
             <NavItem onClick={this.closeCollapsed}>
