@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 // import { compose } from 'recompose';
 import { Button, FormGroup, Label, Input } from 'reactstrap';
 import { withFirebase } from '../firebase';
-import { GPA_CALC } from '../../constants/routes';
+import termNamer from "../../constants/term-names";
 // import * as ROUTES from '../../constants/routes';
 
 class GpaCalcBase extends Component {
@@ -11,11 +11,6 @@ class GpaCalcBase extends Component {
     super(props);
 
 		this.state = { };
-
-		this.totalPoints = 0;
-		this.totalCredits = 0;
-
-		this.speculatedGrades = {};
 
 		this.points = {
 			'A+' : 4,
@@ -38,60 +33,76 @@ class GpaCalcBase extends Component {
 
 	
 	
-	calculateGPA(semesters){
+	calculateGPA(courses){
 		var self = this;
 		var creditsPerCourse = 3;
-		//iterate through semesters
-		Object.entries(semesters).forEach(function(semester) {
+
+		let totalPoints = 0;
+		let totalCredits = 0;
+		courses.forEach(function(course) {
 			//iterate through grades
-			Object.entries(semester[1].courses).forEach(function(course) {
 				//add up grade points
-				if(self.points[course[1].grade] !== -1){
-					self.totalPoints += self.points[course[1].grade] * creditsPerCourse;
-					self.totalCredits += creditsPerCourse;
+				if(self.points[course.grade] !== -1){
+					totalPoints += self.points[course.grade] * creditsPerCourse;
+					totalCredits += creditsPerCourse;
 				}
-
-			});
-
 		});
+		this.setState({
+			totalPoints,
+			totalCredits
+		})
 
 	}
 
 	handleGradeSelect = (event, course) => {
-		this.speculatedGrades[course] = event.target.value;
+		// this.speculatedGrades[course] = event.target.value;
 
-		var totalCredits = 0;
-		var totalPoints = 0;
+		// var totalCredits = 0;
+		// var totalPoints = 0;
 
-		for (const [course, grade] of Object.entries(this.speculatedGrades)) {
-			totalCredits += 3;
-			totalPoints += this.points[grade] * 3;
-		}
+		// for (const [course, grade] of Object.entries(this.speculatedGrades)) {
+		// 	totalCredits += 3;
+		// 	totalPoints += this.points[grade] * 3;
+		// }
 
-		this.setState({
-			semesterGPA: totalPoints/totalCredits,
-			newGPA: (this.totalPoints + totalPoints)/(this.totalCredits + totalCredits)
-		});
+		// this.setState({
+		// 	semesterGPA: totalPoints/totalCredits,
+		// 	newGPA: (this.totalPoints + totalPoints)/(this.totalCredits + totalCredits)
+		// });
   };
 
   async componentDidMount() {
 		const snapshot = await this.props.firebase.user_ref().child("semesters").once('value');
 		const semesters = snapshot.val();
 
-		const courses = semesters[2197].courses;
+		const course_list = Object.keys(semesters).map(k => {
+			const course_per_sem = semesters[k].courses || []
+			return Object.keys(course_per_sem)
+				.map(k => ({term: k, ...course_per_sem[k] }));
+		}).filter(x => (x && x.length > 0)).sort((a, b) => a.termCode < b.termCode);
 
-		this.calculateGPA(semesters);
+		const courses = [].concat.apply([], course_list);
 
-		const courseSelections = Object.keys(courses).map( course => {
+
+		this.calculateGPA(courses);
+
+		this.setState({
+			courses: courses
+		});
+	}
+	
+  render() {
+		const courses = this.state.courses || [];
+		const courseSelections = courses.map( (course, i) => {
 			return(
-				<FormGroup>
-					<Label for={course}>{course}</Label>
+				<FormGroup key={course.id + i}>
+					<Label for={course.id}>{course.id}</Label>
 
 					<Input
 						type="select"
 						name="select"
-						id={course}
-						onChange={e => {this.handleGradeSelect(e, course);}}
+						id={course.id}
+						onChange={e => {this.handleGradeSelect(e, course)}}
 						>
 						{Object.keys(this.points).map(grade => (
 							<option key={course+grade}>{grade}</option>
@@ -102,55 +113,26 @@ class GpaCalcBase extends Component {
 	
 			)
 		})
-
-		this.setState({
-			courseSelections: courseSelections,
-			courses: courses,
-			semesters: semesters,
-			GPA: this.totalPoints/this.totalCredits,
-		})
-	}
-	
-  render() {
-	
-	//const semesters = this.state.semesters;
-	//<p>{ JSON.stringify(courses) }</p>
-	//<p>{ JSON.stringify(semesters) }</p>
-	//<Label for="asdf">Select</Label>
-	//<Input type="text" name="asdf" id="exampleSelect" />
-	//const courses = this.state.courses;
-	const courseSelections = this.state.courseSelections;
-	const GPA = this.state.GPA;
-	var semesterGPA = this.state.semesterGPA;
-	var newGPA = this.state.newGPA;
-
-	if(semesterGPA != null ){
-		semesterGPA = semesterGPA.toFixed(3);
-	}
-
-	if(newGPA != null ){
-		newGPA = newGPA.toFixed(3);
-	}
-
-console.log(newGPA == null);
-console.log(semesterGPA== null);
-
-    return (
-		<form>
-			
-			<h1>GPA: {GPA}</h1>
-			<br></br>
-			<h3>Enter Expected Grades</h3>
-			<br></br>
-			{courseSelections}
-	
-			<h4>Expected Semester GPA: {semesterGPA}</h4>
-			<h3>Expected New GPA: {newGPA}</h3>
-
-		</form>
 		
-    );
-  }
+		const GPA = this.state.GPA;
+		const semesterGPA = this.state.semesterGPA;
+		const newGPA = this.state.newGPA;
+
+		return (
+			<form>
+				
+				<h1>GPA: {GPA}</h1>
+				<br></br>
+				<h3>Enter Expected Grades</h3>
+				<br></br>
+				{courseSelections}
+		
+				<h4>Expected Semester GPA: {semesterGPA}</h4>
+				<h3>Expected New GPA: {newGPA}</h3>
+
+			</form>
+		);
+	}
 }
 
 export default withFirebase(GpaCalcBase);
