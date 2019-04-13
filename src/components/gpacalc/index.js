@@ -10,7 +10,9 @@ class GpaCalcBase extends Component {
   constructor(props) {
     super(props);
 
-		this.state = { };
+		this.state = { 
+			GPA: "??"
+		};
 
 		this.points = {
 			'A+' : 4,
@@ -84,17 +86,16 @@ class GpaCalcBase extends Component {
 		.filter(x => (x && x.length > 0))
 		.sort((a, b) => a.termCode < b.termCode);
 
-		for(let i=1; i<course_list.length; i++) {
-			if(course_list[i].term !== course_list[i-1].term) {
-				course_list[i].termDivider = true;
-			}
-		}
-
 		const courses = [].concat.apply([], course_list).map(c => ({
 			...c,
 			key: c.id + "" + c.term
 		}));
 
+		for(let i=1; i<courses.length; i++) {
+			if(courses[i].term !== courses[i-1].term) {
+				courses[i].termDivider = true;
+			}
+		}
 
 		this.calculateGPA(courses);
 
@@ -106,8 +107,10 @@ class GpaCalcBase extends Component {
   render() {
 		const courses = this.state.courses || [];
 		const courseSelections = courses.map( (course, i) => {
+			let className = "";
+			if(course.termDivider) className = "term-divider";
 			return(
-				<tr key={course.key}>
+				<tr key={course.key} className={className}>
 					<td>{termNamer(course.term)}</td>
 					<td>{course.id}</td>
 					<td>
@@ -127,12 +130,10 @@ class GpaCalcBase extends Component {
 			)
 		})
 		
-		const GPA = this.state.GPA;
-		const semesterGPA = this.state.semesterGPA;
-		const newGPA = this.state.newGPA;
+		const GPA = isNaN(this.state.GPA) ? "??" : this.state.GPA.toFixed(2);
 
 		return (
-			<div>	
+			<div class="gpa-calculator">	
 				<h1>GPA: {GPA}</h1>
 				<h3>Enter Expected Grades</h3>
 				<Table>
