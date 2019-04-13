@@ -1,10 +1,7 @@
 import React, { Component } from 'react';
-// import { withRouter } from 'react-router-dom';
-// import { compose } from 'recompose';
-import { Button, Input, InputGroup, Table, InputGroupAddon, FormGroup, Label } from 'reactstrap';
+import { Input, Table } from 'reactstrap';
 import { withFirebase } from '../firebase';
 import termNamer from "../../constants/term-names";
-// import * as ROUTES from '../../constants/routes';
 
 class GpaCalcBase extends Component {
   constructor(props) {
@@ -59,7 +56,11 @@ class GpaCalcBase extends Component {
 	handleGradeSelect = (event, course) => {
 		const key = course.key;
 		const newGrade = event.target.value;
+		const term = course.term;
 		
+		const course_ref = this.props.firebase.user_ref().child("semesters").child(term).child("courses").child(course.id);
+		course_ref.update({grade: newGrade});
+
 		const newCourses = this.state.courses.slice();
 		newCourses.map(course => {
 			if(course.key === key) {
@@ -106,13 +107,25 @@ class GpaCalcBase extends Component {
 	
   render() {
 		const courses = this.state.courses || [];
-		const courseSelections = courses.map( (course, i) => {
+		let courseSelections = courses.map( (course, i) => {
 			let className = "";
 			if(course.termDivider) className = "term-divider";
 			return(
 				<tr key={course.key} className={className}>
 					<td>{termNamer(course.term)}</td>
 					<td>{course.id}</td>
+					<td>
+						<Input
+							type="select"
+							name="status"
+							value={course.status}
+							onChange={e => {this.handleStatus(e, course)}}
+							>
+							<option value="COMPLETED">Completed this class</option>
+							<option value="INPROG">In Progress</option>
+							<option value="FUTURE">Future</option>
+						</Input>
+					</td>
 					<td>
 						<Input
 							type="select"
@@ -130,10 +143,18 @@ class GpaCalcBase extends Component {
 			)
 		})
 		
+		if(courses.length === 0) {
+			courseSelections = (<tr>
+				<td>...</td>
+				<td> Loading </td>
+				<td>...</td>
+			</tr>)
+		}
+
 		const GPA = isNaN(this.state.GPA) ? "??" : this.state.GPA.toFixed(2);
 
 		return (
-			<div class="gpa-calculator">	
+			<div className="gpa-calculator">	
 				<h1>GPA: {GPA}</h1>
 				<h3>Enter Expected Grades</h3>
 				<Table>
@@ -141,6 +162,7 @@ class GpaCalcBase extends Component {
 						<tr>
 							<th>Term</th>
 							<th>Class</th>
+							<th>Status</th>
 							<th>Grade</th>
 						</tr>
 					</thead>
