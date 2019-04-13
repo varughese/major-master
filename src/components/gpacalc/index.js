@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 // import { withRouter } from 'react-router-dom';
 // import { compose } from 'recompose';
-import { FormGroup, Label, Input } from 'reactstrap';
+import { Button, FormGroup, Label, Input } from 'reactstrap';
 import { withFirebase } from '../firebase';
 import { GPA_CALC } from '../../constants/routes';
 // import * as ROUTES from '../../constants/routes';
@@ -14,6 +14,8 @@ class GpaCalcBase extends Component {
 
 		this.totalPoints = 0;
 		this.totalCredits = 0;
+
+		this.speculatedGrades = {};
 
 		this.points = {
 			'A+' : 4,
@@ -43,7 +45,6 @@ class GpaCalcBase extends Component {
 		Object.entries(semesters).forEach(function(semester) {
 			//iterate through grades
 			Object.entries(semester[1].courses).forEach(function(course) {
-				console.log(course[1].grade);
 				//add up grade points
 				if(self.points[course[1].grade] !== -1){
 					self.totalPoints += self.points[course[1].grade] * creditsPerCourse;
@@ -54,15 +55,23 @@ class GpaCalcBase extends Component {
 
 		});
 
-		console.log(this.totalPoints/this.totalCredits);
-
 	}
 
-	handleGradeSelect = event => {
-    this.setState(
-      { grade: event.target.value }
-      //, () => console.log(this.state.major1)
-    );
+	handleGradeSelect = (event, course) => {
+		this.speculatedGrades[course] = event.target.value;
+
+		var totalCredits = 0;
+		var totalPoints = 0;
+
+		for (const [course, grade] of Object.entries(this.speculatedGrades)) {
+			totalCredits += 3;
+			totalPoints += this.points[grade] * 3;
+		}
+
+		this.setState({
+			semesterGPA: totalPoints/totalCredits,
+			newGPA: (this.totalPoints + totalPoints)/(this.totalCredits + totalCredits)
+		});
   };
 
   async componentDidMount() {
@@ -75,21 +84,22 @@ class GpaCalcBase extends Component {
 
 		const courseSelections = Object.keys(courses).map( course => {
 			return(
-				<div>
+				<FormGroup>
 					<Label for={course}>{course}</Label>
 
 					<Input
 						type="select"
 						name="select"
 						id={course}
-						onChange={e => {this.handleGradeSelect(e);}}
+						onChange={e => {this.handleGradeSelect(e, course);}}
 						>
 						{Object.keys(this.points).map(grade => (
 							<option key={course+grade}>{grade}</option>
 						))}
 					</Input>
+
+				</FormGroup>
 	
-				</div>
 			)
 		})
 
@@ -97,7 +107,7 @@ class GpaCalcBase extends Component {
 			courseSelections: courseSelections,
 			courses: courses,
 			semesters: semesters,
-			GPA: this.totalPoints/this.totalCredits
+			GPA: this.totalPoints/this.totalCredits,
 		})
 	}
 	
@@ -111,17 +121,34 @@ class GpaCalcBase extends Component {
 	//const courses = this.state.courses;
 	const courseSelections = this.state.courseSelections;
 	const GPA = this.state.GPA;
+	var semesterGPA = this.state.semesterGPA;
+	var newGPA = this.state.newGPA;
+
+	if(semesterGPA != null ){
+		semesterGPA = semesterGPA.toFixed(3);
+	}
+
+	if(newGPA != null ){
+		newGPA = newGPA.toFixed(3);
+	}
+
+console.log(newGPA == null);
+console.log(semesterGPA== null);
 
     return (
-		<FormGroup>
+		<form>
 			
 			<h1>GPA: {GPA}</h1>
 			<br></br>
 			<h3>Enter Expected Grades</h3>
 			<br></br>
 			{courseSelections}
-			
-		</FormGroup>
+	
+			<h4>Expected Semester GPA: {semesterGPA}</h4>
+			<h3>Expected New GPA: {newGPA}</h3>
+
+		</form>
+		
     );
   }
 }
