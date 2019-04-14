@@ -140,7 +140,8 @@ class WorkAreaBase extends Component {
 				semestersList
 			};
 		});
-		this.props.firebase.user_ref().child(`semesters/${termcode}/courses/${course.id}`).update(course);
+		const datum = { id: course.id, grade: course.grade, status: course.status };
+		this.props.firebase.user_ref().child(`semesters/${termcode}/courses/${course.id}`).update(datum);
 	}
 
 	removeCourse(termcode, course) {

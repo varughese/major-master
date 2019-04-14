@@ -2,40 +2,6 @@ import React, { Component } from 'react';
 import { Button } from 'reactstrap';
 import { DropTarget, DragSource } from 'react-dnd'
 
-//eslint-disable-next-line
-class SemesterEditMode extends Component {
-	constructor(props) {
-		super(props);
-		this.state = {};
-	}
-
-	render() {
-		return (
-			<div>
-				Semester 
-				Edit me!
-			</div>
-		);
-	}
-}
-
-//eslint-disable-next-line
-class SemesterViewMode extends Component {
-	constructor(props) {
-		super(props);
-		this.state = {};
-	}
-
-	render() {
-		return (
-			<div>
-				Semester 
-				view me
-			</div>
-		);
-	}	
-}
-
 class CourseBase extends Component {
 	constructor(props) {
 		super(props);
@@ -52,13 +18,18 @@ class CourseBase extends Component {
 			<div className="course-item" onClick={this.props.setCurrentCourse}>
 				<div className="course-item-title">{id}</div>
 				<div>
+					{!this.props.viewMode &&
 					<Button 
 						color="danger" 
 						size="sm" 
-						onClick={() => this.props.removeCourse(id)}
+						onClick={(e) => {
+							e.stopPropagation();
+							this.props.removeCourse(id)
+						}}
 					>
 						X
 					</Button>
+					}
 				</div>
 			</div>
 		);
@@ -96,11 +67,6 @@ class Semester extends Component {
 
 	render() {
 		const { courses } = this.props;
-		if (courses) {
-
-		} else {
-			console.log(courses);
-		}
 		return this.props.connectDropTarget(
 			<div className="semester-card col-md-2 col-sm-3">
 				<div className="semester-title">{this.props.title}</div>
@@ -110,6 +76,7 @@ class Semester extends Component {
 								termcode={this.props.termcode}
 								{...course}
 								removeCourse={this.removeCourseFromThisSemester}
+								viewMode={this.props.viewMode}
 								setCurrentCourse={() => this.props.setCurrentCourse(course.id)}
 						/>))}
 				</div>
