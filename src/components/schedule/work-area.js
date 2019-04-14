@@ -77,19 +77,30 @@ class WorkAreaBase extends Component {
 	}
 
 	exportPDF(){
-		var firstName = this.state.userData.first_name;
-		var lastName = this.state.userData.last__name;
-		console.log(this.state);
-		var data = this.state.semestersHash;
+		const firstName = this.state.userData.first_name;
+		const lastName = this.state.userData.last_name;
+		const data = this.state.semestersHash;
 
-		// for (var key in dictionary){
-		// 	if()
-		// }
-
-		var doc = new jsPDF();
+		const doc = new jsPDF();
 		doc.text(firstName + " " + lastName + "'s Plan", 20, 20);
+		doc.line(20,30,200,30);
 
-		doc.save('test.pdf');
+		let y_value = 40
+		for (const key in data){
+			doc.text(termNamer(data[key].id),20,y_value);
+			let courseNumber = 1;
+			for(const key2 in data[key].courses){
+				if((y_value+courseNumber*10) >= 280){
+					doc.addPage();
+					y_value = 20;
+					courseNumber = 1;
+				}
+				doc.text(" - " + data[key].courses[key2].id, 30, y_value + courseNumber*10)
+				courseNumber++;
+			}
+			y_value = y_value + courseNumber*10;
+		}
+		doc.save('Schedule.pdf');
 	}
 
 	addSemester(termcode, courses={}) {
