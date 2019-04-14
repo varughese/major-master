@@ -50,11 +50,6 @@ class NavigationBase extends Component {
         <NavbarToggler onClick={this.toggle} />
         <Collapse isOpen={this.state.isOpen} navbar>
           <Nav className="ml-auto bg-primary" navbar>
-            <NavItem onClick={this.closeCollapsed}>
-              <Link className="nav-link" to={ROUTES.HOME}>
-                Home
-              </Link>
-            </NavItem>
             {user == null && (
               <>
                 <NavItem onClick={this.closeCollapsed}>
@@ -88,11 +83,6 @@ class NavigationBase extends Component {
                 </NavItem>
               </>
             )}
-            <NavItem onClick={this.closeCollapsed}>
-              <Link className="nav-link" to="/testbootstrap">
-                Test Bootstrap
-              </Link>
-            </NavItem>
             <UncontrolledDropdown nav inNavbar>
               <DropdownToggle nav caret>
                 My Account

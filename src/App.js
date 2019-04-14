@@ -37,12 +37,9 @@ class App extends Component {
               </Route>
               <Route path={ROUTES.SIGN_UP} component={SignUp} />
               <Route path={ROUTES.SIGN_IN} component={SignInPage} />
-              <Route path={ROUTES.EDIT_INFO} />
-              <Route path={ROUTES.ENTER_CLASSES} />
               <Route path={ROUTES.VIEW_SCHEDULE} component={ViewSchedule} />
               <Route path={ROUTES.EDIT_SCHEDULE} component={EditSchedule} />
               <Route path={ROUTES.GPA_CALC} component={GpaCalc} />
-              <Route path="/testbootstrap" component={BootstrapExample} />
             </Switch>
           </Container>
         </>
