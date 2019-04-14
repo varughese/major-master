@@ -192,6 +192,7 @@ class GpaCalcBase extends Component {
 			<div className="gpa-calculator">	
 				<div className="gpa-dsplay">
 					<span className="m-lg-2">GPA: {GPA}</span>
+					<span>{'  '}</span>
 					<span>Estimated GPA: {estimatedGPA}</span>
 				</div>
 				<Table>
