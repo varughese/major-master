@@ -22,7 +22,7 @@ import { withAuthentication } from "./components/session";
 class App extends Component {
   render() {
     const isLoggedIn = this.props.firebase.getUserId();
-    console.log(isLoggedIn);
+
     return (
       <Router>
         <>

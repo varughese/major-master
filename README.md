@@ -88,7 +88,7 @@ user to tweak the entries that failed to parse, and write them back to
 `courses.json` with an indentation of 2 spaces.
 
 ```
-$ ./prereq-cli out.json -o courses.json -s 2 -f
+$ ./prereq-cli out.json -o courses.json -s2 -f
 ```
 
 When the tool prompts the user to fix some unparsed text, they can either enter
