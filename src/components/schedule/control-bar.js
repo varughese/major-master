@@ -29,7 +29,6 @@ class ControlBar extends Component {
 				<Button color="primary" onClick={() => {
 							this.props.exportPDF()
 						}}>Export to PDF</Button>
-				<Button color="primary">Edit my info</Button>
 				<Modal isOpen={this.state.modal} toggle={this.toggle}>
 					<ModalHeader toggle={this.toggle}>Add Semester</ModalHeader>
 					<ModalBody>

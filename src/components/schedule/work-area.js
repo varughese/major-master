@@ -17,13 +17,15 @@ class WorkAreaBase extends Component {
 			semestersList: [],
 			course_list: []
 		};
+
+		this.setCurrentCourseDescription = this.setCurrentCourseDescription.bind(this);
 	}
 
 	async componentWillMount() {
 		this.setState({
 			loading: true
 		})
-
+		
 		this.props.firebase.user_ref().on('value', snapshot => {
 			const userData = snapshot.val();
 			const { semestersHash, semestersList } = this.transformSemesterHashToList(userData.semesters);
@@ -37,6 +39,15 @@ class WorkAreaBase extends Component {
 		});
 
 		this.fetchCourseListFromFirebase();
+	}
+
+	async setCurrentCourseDescription(id) {
+		const description = await this.props.firebase.getCourseDescription(id);
+		if(description) {
+			this.setState({
+				currentDescription: description
+			});
+		}
 	}
 
 	async fetchCourseListFromFirebase() {
@@ -158,17 +169,22 @@ class WorkAreaBase extends Component {
 		return (
 			<Row className="schedule-viewer-row">
 				<Col md="3" className="side-panel-holder">
-					<SidePanel course_list={this.state.course_list} />
+					<SidePanel
+						course_list={this.state.course_list}
+						currentCourse={this.state.currentDescription}
+					/>
 				</Col>
 				<Col md="9">
 					<SemesterViewer  
 						semesters={this.state.semestersList} 
 						addCourse={this.addCourse.bind(this)} 
 						removeCourse={this.removeCourse.bind(this)}
+						setCurrentCourse={this.setCurrentCourseDescription.bind(this)}
 					/>
 					<ControlBar 
 						addSemester={this.addSemester.bind(this)}
 						exportPDF={this.exportPDF.bind(this)}
+						setCurrentCourse={this.setCurrentCourseDescription.bind(this)}
 					 />
 				</Col>
 			</Row>

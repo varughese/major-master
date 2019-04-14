@@ -49,7 +49,7 @@ class CourseBase extends Component {
 		const { id } = this.props;
 		
 		return this.props.connectDragSource(
-			<div className="course-item">
+			<div className="course-item" onClick={this.props.setCurrentCourse}>
 				<div className="course-item-title">{id}</div>
 				<div>
 					<Button 
@@ -105,7 +105,13 @@ class Semester extends Component {
 			<div className="semester-card col-md-2 col-sm-3">
 				<div className="semester-title">{this.props.title}</div>
 				<div className="semester-course-list">
-					{courses.map(course => <Course key={course.id} termcode={this.props.termcode} {...course} removeCourse={this.removeCourseFromThisSemester} />)}
+					{courses.map(course => (
+						<Course key={course.id}
+								termcode={this.props.termcode}
+								{...course}
+								removeCourse={this.removeCourseFromThisSemester}
+								setCurrentCourse={() => this.props.setCurrentCourse(course.id)}
+						/>))}
 				</div>
 			</div>
 		);

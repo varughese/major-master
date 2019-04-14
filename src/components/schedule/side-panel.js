@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 // import { Row, Col } from 'reactstrap';
 import SearchCourses from './search-courses';
-import RequirementViewer from './requirement-viewer';
+import SelectedCourse from './selected-course';
 
 class SidePanel extends Component {
 	constructor(props) {
@@ -13,7 +13,7 @@ class SidePanel extends Component {
 		return (
 			<>
 				<SearchCourses course_list={this.props.course_list} />
-				<RequirementViewer />
+				<SelectedCourse selected_course={this.props.currentCourse} />
 			</>
 		);
 	}
