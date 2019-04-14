@@ -72,6 +72,7 @@ class Firebase {
     const snapshot =  await ref.child(id).once("value");
     const description = snapshot.val();
     cache[id] = description;
+    localStorage.setItem("cached_course_descriptions", JSON.stringify(cache));
     return description;
   }
 }

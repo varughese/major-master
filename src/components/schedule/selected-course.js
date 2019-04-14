@@ -7,9 +7,12 @@ class SelectedCourse extends Component {
 	}
 
 	render() {
+		const showHelpText = !this.props.selected_course;
+		const helpText = <p>Click on a class to view more information</p>
+		const courseDescription = <p>{JSON.stringify(this.props.selected_course)}</p>
 		return (
 			<div className="selected-course">
-				<p>{JSON.stringify(this.props.selected_course)}</p>
+				{showHelpText ? helpText : courseDescription}
 			</div>
 		);
 	}

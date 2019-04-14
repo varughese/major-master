@@ -172,6 +172,7 @@ class WorkAreaBase extends Component {
 					<SidePanel
 						course_list={this.state.course_list}
 						currentCourse={this.state.currentDescription}
+						setCurrentCourse={this.setCurrentCourseDescription.bind(this)}
 					/>
 				</Col>
 				<Col md="9">
@@ -184,7 +185,6 @@ class WorkAreaBase extends Component {
 					<ControlBar 
 						addSemester={this.addSemester.bind(this)}
 						exportPDF={this.exportPDF.bind(this)}
-						setCurrentCourse={this.setCurrentCourseDescription.bind(this)}
 					 />
 				</Col>
 			</Row>
