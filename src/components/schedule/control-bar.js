@@ -5,9 +5,9 @@ import SemesterChooser from './semseter-chooser'
 class ControlBar extends Component {
 	constructor(props) {
 		super(props);
+		this.getTermCode = this.getTermCode.bind(this);
 		this.state = {
-			semester_code: "Enter Semester Code",
-			year_code: ""
+			full_term_code: ""
 		};
 	}
 
@@ -22,6 +22,10 @@ class ControlBar extends Component {
 		this.setState({ [name]: value });
 	}
 
+	getTermCode(code){
+		this.setState({ "full_term_code": code })
+	}
+
 	render() {
 		const { semester_code, year_code } = this.state;
 		return (
@@ -34,11 +38,14 @@ class ControlBar extends Component {
 				<Modal isOpen={this.state.modal} toggle={this.toggle}>
 					<ModalHeader toggle={this.toggle}>Add Semester</ModalHeader>
 					<ModalBody>
-						<SemesterChooser></SemesterChooser>
+						<SemesterChooser 
+							setTermCode={this.getTermCode}
+						/>
+						{this.state.full_term_code}
 					</ModalBody>
 					<ModalFooter>
 						<Button color="primary" onClick={() => {
-							this.props.addSemester(semester_code);
+							this.props.addSemester(this.state.full_term_code);
 							this.toggle();
 						}}>Do Something</Button>{' '}
 						<Button color="secondary" onClick={this.toggle}>Cancel</Button>

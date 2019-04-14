@@ -11,7 +11,7 @@ class SemesterChooser extends Component{
         };
     }
 
-    onChange = event => {
+    onTermChange = event => {
 		const { name, value } = event.target;
 		console.log(name + ";" + value);
 
@@ -21,6 +21,7 @@ class SemesterChooser extends Component{
                 var temp = yr.substring(0,1) + yr.substring (2,4) + this.state["semseter_code"];
                 console.log("setting code " + temp);
                 this.setState({"full_term_code": temp});
+                this.props.setTermCode(temp);
             }
         });
         
@@ -34,11 +35,11 @@ class SemesterChooser extends Component{
                     <Label for="semester">Semester</Label>
                     <Input type="number" 
                             name="year_code" 
-                            onChange={this.onChange}
+                            onChange={this.onTermChange}
                             value={year_code}
                             id="year_code" 
                     />
-                    <ButtonGroup value={semester_code} onClick={this.onChange}>
+                    <ButtonGroup value={semester_code} onClick={this.onTermChange}>
                         <Button name="semseter_code" type="button" value="1">Fall</Button>
                         <Button name="semseter_code" type="button" value="4">Spring</Button>
                         <Button name="semseter_code" type="button" value="7">Summer</Button>
