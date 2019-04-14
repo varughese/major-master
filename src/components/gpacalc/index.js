@@ -38,17 +38,26 @@ class GpaCalcBase extends Component {
 
 		let totalPoints = 0;
 		let totalCredits = 0;
+
+		let estimatedPoints = 0;
+		let estimatedCredits = 0;
 		courses.forEach(function(course) {
 			if(self.points[course.grade] !== -1){
-				totalPoints += self.points[course.grade] * creditsPerCourse;
-				totalCredits += creditsPerCourse;
+				if(course.status === "COMPLETED") {
+					totalPoints += self.points[course.grade] * creditsPerCourse;
+					totalCredits += creditsPerCourse;
+				}
+				estimatedPoints += self.points[course.grade] * creditsPerCourse;
+				estimatedCredits += creditsPerCourse;
 			}
 		});
 		const GPA = totalPoints / totalCredits;
+		const estimatedGPA = estimatedPoints / estimatedCredits;
 		this.setState({
 			totalPoints,
 			totalCredits,
-			GPA
+			GPA,
+			estimatedGPA
 		})
 
 	}
@@ -172,11 +181,14 @@ class GpaCalcBase extends Component {
 		}
 
 		const GPA = isNaN(this.state.GPA) ? "??" : this.state.GPA.toFixed(2);
+		const estimatedGPA = isNaN(this.state.estimatedGPA) ? "??" : this.state.estimatedGPA.toFixed(2);
 
 		return (
 			<div className="gpa-calculator">	
-				<h1>GPA: {GPA}</h1>
-				<h3>Enter Expected Grades</h3>
+				<div className="gpa-dsplay">
+					<span class="m-lg-2">GPA: {GPA}</span>
+					<span>Estimated GPA: {estimatedGPA}</span>
+				</div>
 				<Table>
 					<thead>
 						<tr>
