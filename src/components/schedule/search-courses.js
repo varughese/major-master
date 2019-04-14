@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Input, Form, FormGroup, Button, Label } from 'reactstrap';
+import { Input, Form, FormGroup } from 'reactstrap';
 import { DragSource } from 'react-dnd'
 
 function CourseItemSearchResultBase({ connectDragSource, isDragging, id, name }) {
