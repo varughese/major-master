@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input } from 'reactstrap';
+import { Button, Modal, ModalHeader, ModalBody, ButtonGroup, ModalFooter, Form, FormGroup, Label, Input } from 'reactstrap';
 
 
 class ControlBar extends Component {
@@ -36,12 +36,17 @@ class ControlBar extends Component {
 						<Form>
 							<FormGroup>
 								<Label for="semester_code">Semester</Label>
-								<Input type="number" 
+								{/* <Input type="number" 
 									   name="semester_code" 
 									   onChange={this.onChange}
 									   value={semester_code}
 									   id="semester_code" 
-								/>
+								/> */}
+								<ButtonGroup>
+									<Button>Left</Button>
+									<Button>Middle</Button>
+									<Button>Right</Button>
+								</ButtonGroup>
 							</FormGroup>
 							<div>{semester_code}</div>
 						</Form>
