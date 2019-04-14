@@ -91,12 +91,17 @@ class WorkAreaBase extends Component {
 			doc.text(termNamer(data[key].id),20,y_value);
 			var courseNumber = 1;
 			for(var key2 in data[key].courses){
+				console.log(data[key].courses[key2].id + " : " + y_value + " ;"+  courseNumber*10)
+				if((y_value+courseNumber*10) >= 280){
+					doc.addPage();
+					y_value = 20;
+					courseNumber = 1;
+				}
 				doc.text(" - " + data[key].courses[key2].id, 30, y_value + courseNumber*10)
 				courseNumber++;
 			}
 			y_value = y_value + courseNumber*10;
 		}
-
 		doc.save('test.pdf');
 	}
 
