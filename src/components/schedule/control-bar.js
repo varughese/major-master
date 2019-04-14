@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
-import { Button, Modal, ModalHeader, ModalBody, ButtonGroup, ModalFooter, Form, FormGroup, Label, Input } from 'reactstrap';
-
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import SemesterChooser from './semseter-chooser'
 
 class ControlBar extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			semester_code: "Enter Semester Code"
+			semester_code: "Enter Semester Code",
+			year_code: ""
 		};
 	}
 
@@ -22,7 +23,7 @@ class ControlBar extends Component {
 	}
 
 	render() {
-		const { semester_code } = this.state;
+		const { semester_code, year_code } = this.state;
 		return (
 			<div className="control-bar">
 				<Button color="primary" onClick={this.toggle}>Add Semester</Button>
@@ -33,23 +34,7 @@ class ControlBar extends Component {
 				<Modal isOpen={this.state.modal} toggle={this.toggle}>
 					<ModalHeader toggle={this.toggle}>Add Semester</ModalHeader>
 					<ModalBody>
-						<Form>
-							<FormGroup>
-								<Label for="semester_code">Semester</Label>
-								{/* <Input type="number" 
-									   name="semester_code" 
-									   onChange={this.onChange}
-									   value={semester_code}
-									   id="semester_code" 
-								/> */}
-								<ButtonGroup>
-									<Button>Left</Button>
-									<Button>Middle</Button>
-									<Button>Right</Button>
-								</ButtonGroup>
-							</FormGroup>
-							<div>{semester_code}</div>
-						</Form>
+						<SemesterChooser></SemesterChooser>
 					</ModalBody>
 					<ModalFooter>
 						<Button color="primary" onClick={() => {
