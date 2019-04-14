@@ -279,7 +279,7 @@ class SignUpBase extends React.Component {
         email: this.state.email,
         enrollment_term: this.state.enrollterm,
         first_name: this.state.firstname,
-        last__name: this.state.lastname,
+        last_name: this.state.lastname,
         id: user.uid,
         major: this.state.major,
         semesters: {

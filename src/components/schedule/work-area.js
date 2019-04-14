@@ -6,6 +6,8 @@ import { withFirebase } from '../firebase';
 import termNamer from "../../constants/term-names";
 import SidePanel from "./side-panel";
 import { Col, Row } from "reactstrap";
+import * as jsPDF from 'jspdf'
+
 
 class WorkAreaBase extends Component {
 	constructor(props) {
@@ -28,6 +30,7 @@ class WorkAreaBase extends Component {
 			console.log("Data recieved from database", semestersHash);
 			this.setState({
 				loading: false,
+				userData,
 				semestersHash,
 				semestersList
 			});
@@ -71,6 +74,33 @@ class WorkAreaBase extends Component {
 
 	componentWillUnmount() {
 		this.props.firebase.user_ref().off();
+	}
+
+	exportPDF(){
+		const firstName = this.state.userData.first_name;
+		const lastName = this.state.userData.last_name;
+		const data = this.state.semestersHash;
+
+		const doc = new jsPDF();
+		doc.text(firstName + " " + lastName + "'s Plan", 20, 20);
+		doc.line(20,30,200,30);
+
+		let y_value = 40
+		for (const key in data){
+			doc.text(termNamer(data[key].id),20,y_value);
+			let courseNumber = 1;
+			for(const key2 in data[key].courses){
+				if((y_value+courseNumber*10) >= 280){
+					doc.addPage();
+					y_value = 20;
+					courseNumber = 1;
+				}
+				doc.text(" - " + data[key].courses[key2].id, 30, y_value + courseNumber*10)
+				courseNumber++;
+			}
+			y_value = y_value + courseNumber*10;
+		}
+		doc.save('Schedule.pdf');
 	}
 
 	addSemester(termcode, courses={}) {
@@ -136,7 +166,10 @@ class WorkAreaBase extends Component {
 						addCourse={this.addCourse.bind(this)} 
 						removeCourse={this.removeCourse.bind(this)}
 					/>
-					<ControlBar addSemester={this.addSemester.bind(this)} />
+					<ControlBar 
+						addSemester={this.addSemester.bind(this)}
+						exportPDF={this.exportPDF.bind(this)}
+					 />
 				</Col>
 			</Row>
 		);
