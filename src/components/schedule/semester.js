@@ -117,16 +117,14 @@ const semesterTarget = {
 		const item = monitor.getItem();
 		if(item.removeMe) {
 			props.removeCourse(item.termcode, {
-				id: item.id,
-				grade: "?",
-				status: "?"
+				id: item.id
 			});
 		}
 		console.log(item);
 		props.addCourse(props.termcode, {
 			id: item.id,
 			grade: "?",
-			status: "?"
+			status: "FUTURE"
 		});
 	}
 }

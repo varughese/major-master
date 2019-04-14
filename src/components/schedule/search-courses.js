@@ -53,25 +53,25 @@ class SearchCourses extends Component {
 	render() {
 
 		let courses = this.state.matchedCourses;
+		const showHelp = courses.length === 0;
+		const helpText = <p className="help-text">Search in the box above and drag courses onto the semester you want to take them.</p>
 		return (
 			<div className="course-search-section">
-				<h4>Search Courses</h4>
 				<Form inline={true}>
 					<FormGroup>
-						<Label for="search_input">Searcb</Label>
 						<Input name="search_input" 
 							   id="search_input"
 							   type="text" 
 							   value={this.state.searchString}
 							   onChange={this.handleChange}
 							   placeholder="Search for courses..." />
-						<Button color="primary">Search</Button>
 					</FormGroup>
 				</Form>
-				<ul>
+				<ul className={showHelp ? "help-text" : ""}>
 				{ courses && 
 				courses.map((course, i) => <CourseItemSearchResult key={i} {...course}/>)
 				}
+				{ showHelp && helpText}
 				</ul>
 			</div>
 		);
