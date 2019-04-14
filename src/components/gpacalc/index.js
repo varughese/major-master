@@ -34,21 +34,29 @@ class GpaCalcBase extends Component {
 	
 	calculateGPA(courses){
 		var self = this;
-		var creditsPerCourse = 3;
 
 		let totalPoints = 0;
 		let totalCredits = 0;
+
+		let estimatedPoints = 0;
+		let estimatedCredits = 0;
 		courses.forEach(function(course) {
 			if(self.points[course.grade] !== -1){
-				totalPoints += self.points[course.grade] * creditsPerCourse;
-				totalCredits += creditsPerCourse;
+				if(course.status === "COMPLETED") {
+					totalPoints += self.points[course.grade] * course.credits;
+					totalCredits += course.credits;
+				}
+				estimatedPoints += self.points[course.grade] * course.credits;
+				estimatedCredits += course.credits;
 			}
 		});
 		const GPA = totalPoints / totalCredits;
+		const estimatedGPA = estimatedPoints / estimatedCredits;
 		this.setState({
 			totalPoints,
 			totalCredits,
-			GPA
+			GPA,
+			estimatedGPA
 		})
 
 	}
@@ -112,10 +120,14 @@ class GpaCalcBase extends Component {
 			key: c.id + "" + c.term
 		}));
 
-		for(let i=1; i<courses.length; i++) {
-			if(courses[i].term !== courses[i-1].term) {
+		for(let i=0; i<courses.length; i++) {
+			if(i!== 0 && (courses[i].term !== courses[i-1].term)) {
 				courses[i].termDivider = true;
 			}
+			const id = courses[i].id;
+			// this is a really slow / bad way to do it lol
+			const desc = await this.props.firebase.getCourseDescription(id);
+			courses[i].credits = desc.credits || 3;
 		}
 
 		this.calculateGPA(courses);
@@ -134,6 +146,7 @@ class GpaCalcBase extends Component {
 				<tr key={course.key} className={className}>
 					<td>{termNamer(course.term)}</td>
 					<td>{course.id}</td>
+					<td>{course.credits}</td>
 					<td>
 						<Input
 							type="select"
@@ -168,20 +181,25 @@ class GpaCalcBase extends Component {
 				<td>...</td>
 				<td> Loading </td>
 				<td>...</td>
+				<td>...</td>
 			</tr>)
 		}
 
 		const GPA = isNaN(this.state.GPA) ? "??" : this.state.GPA.toFixed(2);
+		const estimatedGPA = isNaN(this.state.estimatedGPA) ? "??" : this.state.estimatedGPA.toFixed(2);
 
 		return (
 			<div className="gpa-calculator">	
-				<h1>GPA: {GPA}</h1>
-				<h3>Enter Expected Grades</h3>
+				<div className="gpa-dsplay">
+					<span className="m-lg-2">GPA: {GPA}</span>
+					<span>Estimated GPA: {estimatedGPA}</span>
+				</div>
 				<Table>
 					<thead>
 						<tr>
 							<th>Term</th>
 							<th>Class</th>
+							<th>Credits</th>
 							<th>Status</th>
 							<th>Grade</th>
 						</tr>
