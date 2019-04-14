@@ -17,6 +17,8 @@ class Firebase {
 
     this.db = app.database();
     this.auth = app.auth();
+
+    this.cached_course_descriptions = JSON.parse(localStorage.getItem("cached_course_descriptions")) || {};
   }
 
   getUser = () => {
@@ -60,6 +62,18 @@ class Firebase {
 
   async createUserWithEmailAndPassword(email, password) {
     return this.auth.createUserWithEmailAndPassword(email, password);
+  }
+
+  async getCourseDescription(id) {
+    const cache = this.cached_course_descriptions;
+    if(cache[id]) return cache[id];
+
+    const ref = this.db.ref("course_descriptions");
+    const snapshot =  await ref.child(id).once("value");
+    const description = snapshot.val();
+    cache[id] = description;
+    localStorage.setItem("cached_course_descriptions", JSON.stringify(cache));
+    return description;
   }
 }
 

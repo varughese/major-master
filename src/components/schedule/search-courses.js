@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { Input, Form, FormGroup, Button, Label } from 'reactstrap';
 import { DragSource } from 'react-dnd'
 
-function CourseItemSearchResultBase({ connectDragSource, isDragging, id, name }) {
-	return connectDragSource(<li>{id} - {name}</li>);
+function CourseItemSearchResultBase({ connectDragSource, isDragging, id, name, setCurrentCourse}) {
+	return connectDragSource(<li onClick={setCurrentCourse}>{id} - {name}</li>);
 }
 
 function collect(connect, monitor) {
@@ -69,7 +69,12 @@ class SearchCourses extends Component {
 				</Form>
 				<ul className={showHelp ? "help-text" : ""}>
 				{ courses && 
-				courses.map((course, i) => <CourseItemSearchResult key={i} {...course}/>)
+					courses.map((course, i) => {
+						return <CourseItemSearchResult key={i}
+							setCurrentCourse={() => this.props.setCurrentCourse(course.id)}
+							{...course}
+						/>
+					})
 				}
 				{ showHelp && helpText}
 				</ul>
