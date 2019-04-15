@@ -1,5 +1,6 @@
 import React from "react";
 import { Col, Button, FormGroup, Label, Input } from "reactstrap";
+import SemesterChooser from "./schedule/semseter-chooser.js"
 
 import { withFirebase } from "./firebase";
 import * as ROUTES from "../constants/routes";
@@ -7,6 +8,7 @@ import * as ROUTES from "../constants/routes";
 class SignUpBase extends React.Component {
   constructor(props) {
     super(props);
+    this.getTermCode = this.getTermCode.bind(this);
     this.state = {
       email: "",
       password1: "",
@@ -330,6 +332,10 @@ class SignUpBase extends React.Component {
     );
   };
 
+  getTermCode(code){
+		this.setState({ enrollterm: code })
+	}
+
   handleChange = event => {
     this.setState({
       [event.target.name]: event.target.value,
@@ -374,13 +380,8 @@ class SignUpBase extends React.Component {
           </FormGroup>
           <FormGroup>
             <Label for="inputEnrollTerm">Enrollment Term:</Label>
-            <Input
-              name="enrollterm"
-              id="inputEnrollTerm"
-              placeholder="Enrollment Term"
-              onChange={e => {
-                this.handleChange(e);
-              }}
+            <SemesterChooser
+              setTermCode={this.getTermCode}
             />
           </FormGroup>
           <FormGroup>

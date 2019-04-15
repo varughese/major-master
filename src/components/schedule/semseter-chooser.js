@@ -13,7 +13,9 @@ class SemesterChooser extends Component{
 
     onTermChange = event => {
 		const { name, value } = event.target;
-		console.log(name + ";" + value);
+        this.setState({
+            active_button: value
+        });
 
         this.setState({ [name]: value }, (state) => {
             if(this.state["year_code"].length === 4){
@@ -28,7 +30,7 @@ class SemesterChooser extends Component{
 	}
 
     render() {
-        const { semester_code, year_code } = this.state;
+        const { semester_code, year_code, active_button } = this.state;
         return (
             <Form>
                 <FormGroup>
@@ -40,9 +42,9 @@ class SemesterChooser extends Component{
                             id="year_code" 
                     />
                     <ButtonGroup value={semester_code} onClick={this.onTermChange}>
-                        <Button name="semseter_code" type="button" value="1">Fall</Button>
-                        <Button name="semseter_code" type="button" value="4">Spring</Button>
-                        <Button name="semseter_code" type="button" value="7">Summer</Button>
+                        <Button active={active_button === '1'} name="semseter_code" type="button" value="1">Fall</Button>
+                        <Button active={active_button === '4'} name="semseter_code" type="button" value="4">Spring</Button>
+                        <Button active={active_button === '7'} name="semseter_code" type="button" value="7">Summer</Button>
                     </ButtonGroup>
                 </FormGroup>
             </Form>
