@@ -23,7 +23,7 @@ class CourseBase extends Component {
 						color="danger" 
 						size="sm" 
 						onClick={(e) => {
-							e.stopPropogation();
+							e.stopPropagation();
 							this.props.removeCourse(id)
 						}}
 					>
