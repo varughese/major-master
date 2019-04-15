@@ -24,7 +24,7 @@ def parseCourseList():
                 index+=1
 
 def parseCourseDescriptions():
-    with open('data.json') as json_file:  
+    with open('courses.json') as json_file:  
         data = json.load(json_file)
         for subject in data:
             for course in data[subject]:
@@ -44,5 +44,6 @@ def parseCourseDescriptions():
                 }
                 ref.set(temp)
 
-parseCourseList()
+
+
 parseCourseDescriptions()
