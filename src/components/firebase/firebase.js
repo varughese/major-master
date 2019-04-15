@@ -43,6 +43,8 @@ class Firebase {
 
   signOut = () => {
     localStorage.removeItem("authUser");
+    localStorage.removeItem("cached_course_descriptions");
+    localStorage.removeItem("course_list");
     return this.auth.signOut();
   };
 

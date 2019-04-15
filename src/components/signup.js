@@ -3,6 +3,7 @@ import { Col, Button, FormGroup, Label, Input } from "reactstrap";
 import SemesterChooser from "./schedule/semseter-chooser.js"
 
 import { withFirebase } from "./firebase";
+import getNextTerms from '../util/get-next-terms';
 import * as ROUTES from "../constants/routes";
 
 class SignUpBase extends React.Component {
@@ -257,7 +258,7 @@ class SignUpBase extends React.Component {
       this.setState({
         errorMessage: "Passwords do not match"
       });
-    } else if (this.state.enrollterm === "") {
+    } else if (this.state.enrollterm === "" || this.state.enrollterm.length !== 4) {
       this.setState({
         errorMessage: "Enrollment term is not entered"
       });
@@ -277,6 +278,8 @@ class SignUpBase extends React.Component {
       const user = this.props.firebase.getUser();
       user.sendEmailVerification();
       const user_ref = this.props.firebase.user_ref();
+      const semesters = getNextTerms(this.state.enrollterm);
+
       user_ref.set({
         email: this.state.email,
         enrollment_term: this.state.enrollterm,
@@ -284,39 +287,7 @@ class SignUpBase extends React.Component {
         last_name: this.state.lastname,
         id: user.uid,
         major: this.state.major,
-        semesters: {
-          [this.state.enrollterm]: {
-            id: this.state.enrollterm,
-            courses: {}
-          },
-          "2174": {
-            id: 2174
-          },
-          "2181": {
-            id: 2181
-          },
-          "2184": {
-            id: 2184
-          },
-          "2191": {
-            id: 2191
-          },
-          "2194": {
-            id: 2194
-          },
-          "2201": {
-            id: 2201
-          },
-          "2204": {
-            id: 2204
-          },
-          "2211": {
-            id: 2211
-          },
-          "2214": {
-            id: 2214
-          }
-        }
+        semesters
       });
 
       // this is janky lol, suppose to do similar to what
