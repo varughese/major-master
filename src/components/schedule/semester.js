@@ -23,7 +23,7 @@ class CourseBase extends Component {
 						color="danger" 
 						size="sm" 
 						onClick={(e) => {
-							e.stopPropagation();
+							e.stopPropogation();
 							this.props.removeCourse(id)
 						}}
 					>
@@ -93,7 +93,7 @@ const semesterTarget = {
 				id: item.id
 			});
 		}
-		console.log(item);
+		props.checkPrereq(props.termcode, item.id);
 		props.addCourse(props.termcode, {
 			id: item.id,
 			grade: "?",

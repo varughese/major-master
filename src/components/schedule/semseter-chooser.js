@@ -16,7 +16,7 @@ class SemesterChooser extends Component{
 		console.log(name + ";" + value);
 
         this.setState({ [name]: value }, (state) => {
-            if(this.state["year_code"].length == 4){
+            if(this.state["year_code"].length === 4){
                 var yr = this.state["year_code"];
                 var temp = yr.substring(0,1) + yr.substring (2,4) + this.state["semseter_code"];
                 console.log("setting code " + temp);
@@ -45,7 +45,6 @@ class SemesterChooser extends Component{
                         <Button name="semseter_code" type="button" value="7">Summer</Button>
                     </ButtonGroup>
                 </FormGroup>
-                <div>{semester_code}</div>
             </Form>
         );
     }

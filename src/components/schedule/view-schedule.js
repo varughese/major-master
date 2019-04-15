@@ -29,6 +29,10 @@ class ViewScheduleBase extends Component {
 		});
 	}
 
+	componentWillUnmount() {
+		this.props.firebase.user_ref().off();
+	}
+
 	// should not be here cuz this is copied but deadline was soon
 	transformSemesterHashToList(data={}) {
 		const semesters = Object.keys(data).map(k => data[k]).sort(a => a.id);
@@ -47,7 +51,9 @@ class ViewScheduleBase extends Component {
 
 	render() {
 		return (
-			<SemesterViewer semesters={this.state.semestersList} viewMode={true}/>
+			<div draggable="false">
+				<SemesterViewer semesters={this.state.semestersList} viewMode={true}/>
+			</div>
 		);
 	}
 }

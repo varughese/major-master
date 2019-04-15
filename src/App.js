@@ -9,9 +9,7 @@ import * as ROUTES from "./constants/routes";
 import { Container } from "reactstrap";
 
 import {
-  BootstrapExample,
   EditSchedule,
-  ViewSchedule,
   GpaCalc,
   SignInPage
 } from "./components";
@@ -32,12 +30,12 @@ class App extends Component {
               <Route exact path="/">
                 <Redirect
                   from="/"
-                  to={isLoggedIn ? ROUTES.VIEW_SCHEDULE : ROUTES.SIGN_IN}
+                  to={isLoggedIn ? ROUTES.EDIT_SCHEDULE : ROUTES.SIGN_IN}
                 />
               </Route>
               <Route path={ROUTES.SIGN_UP} component={SignUp} />
               <Route path={ROUTES.SIGN_IN} component={SignInPage} />
-              <Route path={ROUTES.VIEW_SCHEDULE} component={ViewSchedule} />
+              {/* <Route path={ROUTES.VIEW_SCHEDULE} component={ViewSchedule} /> */}
               <Route path={ROUTES.EDIT_SCHEDULE} component={EditSchedule} />
               <Route path={ROUTES.GPA_CALC} component={GpaCalc} />
             </Switch>

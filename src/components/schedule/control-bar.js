@@ -27,7 +27,6 @@ class ControlBar extends Component {
 	}
 
 	render() {
-		const { semester_code, year_code } = this.state;
 		return (
 			<div className="control-bar">
 				<Button color="primary" onClick={this.toggle}>Add Semester</Button>

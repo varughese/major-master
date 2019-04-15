@@ -271,7 +271,7 @@ class SignUpBase extends React.Component {
         });
         return;
       }
-
+      
       const user = this.props.firebase.getUser();
       user.sendEmailVerification();
       const user_ref = this.props.firebase.user_ref();
@@ -286,6 +286,33 @@ class SignUpBase extends React.Component {
           [this.state.enrollterm]: {
             id: this.state.enrollterm,
             courses: {}
+          },
+          "2174": {
+            id: 2174
+          },
+          "2181": {
+            id: 2181
+          },
+          "2184": {
+            id: 2184
+          },
+          "2191": {
+            id: 2191
+          },
+          "2194": {
+            id: 2194
+          },
+          "2201": {
+            id: 2201
+          },
+          "2204": {
+            id: 2204
+          },
+          "2211": {
+            id: 2211
+          },
+          "2214": {
+            id: 2214
           }
         }
       });

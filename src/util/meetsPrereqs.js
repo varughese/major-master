@@ -11,7 +11,7 @@
  * @return
  *   true if taken courses meets prerequisites
  */
-export function meetsPrereqs(taken, prereqs) {
+export default function meetsPrereqs(taken, prereqs) {
   if(prereqs == null) return true;
 
   if(prereqs.hasOwnProperty('or')) {
@@ -25,7 +25,7 @@ export function meetsPrereqs(taken, prereqs) {
     const [, otherDept, otherNum] = prereqs['>'].match(courseRegex) || [];
     for(const course of taken) {
       const [, dept, num] = course.match(courseRegex) || [];
-      if(dept == otherDept && num >= otherNum) return true;
+      if(dept === otherDept && num >= otherNum) return true;
     }
     return false;
   }
@@ -35,7 +35,7 @@ export function meetsPrereqs(taken, prereqs) {
     const [, , highNum] = prereqs.range[1].match(courseRegex) || [];
     for(const course of taken) {
       const [, dept, num] = course.match(courseRegex) || [];
-      if(dept == otherDept && num >= lowNum && num <= highNum) return true;
+      if(dept === otherDept && num >= lowNum && num <= highNum) return true;
     }
     return false;
   }

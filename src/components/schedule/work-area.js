@@ -5,8 +5,9 @@ import ControlBar from './control-bar';
 import { withFirebase } from '../firebase';
 import termNamer from "../../constants/term-names";
 import SidePanel from "./side-panel";
-import { Col, Row } from "reactstrap";
-import * as jsPDF from 'jspdf'
+import { Col, Row, Modal, ModalHeader, ModalBody, ModalFooter, Button } from "reactstrap";
+import * as jsPDF from 'jspdf';
+import meetsPrereqs from '../../util/meetsPrereqs';
 
 
 class WorkAreaBase extends Component {
@@ -166,6 +167,22 @@ class WorkAreaBase extends Component {
 		this.props.firebase.user_ref().child(`semesters/${termcode}/courses/${course.id}`).remove();
 	}
 
+	async checkPrereq(termcode, course_id) {
+		const sems = this.state.semestersList.filter(sem => Number(sem.id) <= Number(termcode));
+		const courses = [].concat.apply([], sems.map(s => s.courses)).map(c => c.id)
+		const description = await this.props.firebase.getCourseDescription(course_id);
+		const hasPrereqTree = description.prereq && description.prereq.tree !== null;
+		if(hasPrereqTree) {
+			const tree = description.prereq.tree;
+			const valid = meetsPrereqs(new Set(courses), tree);
+			if(!valid) {
+				this.setState({
+					invalidPrereq: description
+				})
+			}
+		}
+	}
+
 	render() {
 		return (
 			<Row className="schedule-viewer-row">
@@ -181,8 +198,17 @@ class WorkAreaBase extends Component {
 						semesters={this.state.semestersList} 
 						addCourse={this.addCourse.bind(this)} 
 						removeCourse={this.removeCourse.bind(this)}
+						checkPrereq={this.checkPrereq.bind(this)}
 						setCurrentCourse={this.setCurrentCourseDescription.bind(this)}
 					/>
+					<MessageBar 
+						invalidPrereq={this.state.invalidPrereq}
+						okayBtn={() => {
+							this.setState({
+								invalidPrereq: false
+							})
+						}}
+					/> 
 					<ControlBar 
 						addSemester={this.addSemester.bind(this)}
 						exportPDF={this.exportPDF.bind(this)}
@@ -191,6 +217,25 @@ class WorkAreaBase extends Component {
 			</Row>
 		);
 	}
+}
+
+function MessageBar({invalidPrereq, okayBtn}) {
+	if(!invalidPrereq) {
+		return <></>;
+	}
+	const prereq = invalidPrereq.prereq.text
+	const courseTitle = invalidPrereq.title;
+	return (
+		<Modal isOpen={!!invalidPrereq}>
+			<ModalHeader>Prerequisite Error</ModalHeader>
+			<ModalBody>
+				Just to let you know, according to Pitt's website, the prereqs for {courseTitle} are {prereq}.
+			</ModalBody>
+			<ModalFooter>
+				<Button color="primary" onClick={okayBtn}>Okay!</Button>
+			</ModalFooter>
+		</Modal>
+	);
 }
 
 const WorkArea = withFirebase(WorkAreaBase);
