@@ -1,42 +1,8 @@
 import React, { Component } from 'react';
 import { Button } from 'reactstrap';
-import { DropTarget } from 'react-dnd'
+import { DropTarget, DragSource } from 'react-dnd'
 
-//eslint-disable-next-line
-class SemesterEditMode extends Component {
-	constructor(props) {
-		super(props);
-		this.state = {};
-	}
-
-	render() {
-		return (
-			<div>
-				Semester 
-				Edit me!
-			</div>
-		);
-	}
-}
-
-//eslint-disable-next-line
-class SemesterViewMode extends Component {
-	constructor(props) {
-		super(props);
-		this.state = {};
-	}
-
-	render() {
-		return (
-			<div>
-				Semester 
-				view me
-			</div>
-		);
-	}	
-}
-
-class Course extends Component {
+class CourseBase extends Component {
 	constructor(props) {
 		super(props);
 
@@ -47,22 +13,41 @@ class Course extends Component {
 
 	render() {
 		const { id } = this.props;
-		return (
-			<div className="course-item">
+		
+		return this.props.connectDragSource(
+			<div className="course-item" onClick={this.props.setCurrentCourse}>
 				<div className="course-item-title">{id}</div>
 				<div>
+					{!this.props.viewMode &&
 					<Button 
 						color="danger" 
 						size="sm" 
-						onClick={() => this.props.removeCourse(id)}
+						onClick={(e) => {
+							e.stopPropagation();
+							this.props.removeCourse(id)
+						}}
 					>
 						X
 					</Button>
+					}
 				</div>
 			</div>
 		);
 	}
 }
+
+function courseCollect(connect, monitor) {
+	return {
+		connectDragSource: connect.dragSource(),
+		isDragging: monitor.isDragging()		
+	}
+}
+
+const Course = DragSource("COURSE", {
+	beginDrag(props) {
+		return {removeMe: true, ...props};
+	}
+}, courseCollect)(CourseBase);
 
 class Semester extends Component {
 	constructor(props) {
@@ -82,16 +67,18 @@ class Semester extends Component {
 
 	render() {
 		const { courses } = this.props;
-		if (courses) {
-
-		} else {
-			console.log(courses);
-		}
 		return this.props.connectDropTarget(
 			<div className="semester-card col-md-2 col-sm-3">
 				<div className="semester-title">{this.props.title}</div>
 				<div className="semester-course-list">
-					{courses.map(course => <Course key={course.id} {...course} removeCourse={this.removeCourseFromThisSemester} />)}
+					{courses.map(course => (
+						<Course key={course.id}
+								termcode={this.props.termcode}
+								{...course}
+								removeCourse={this.removeCourseFromThisSemester}
+								viewMode={this.props.viewMode}
+								setCurrentCourse={() => this.props.setCurrentCourse(course.id)}
+						/>))}
 				</div>
 			</div>
 		);
@@ -101,10 +88,16 @@ class Semester extends Component {
 const semesterTarget = {
 	drop(props, monitor) {
 		const item = monitor.getItem();
+		if(item.removeMe) {
+			props.removeCourse(item.termcode, {
+				id: item.id
+			});
+		}
+		console.log(item);
 		props.addCourse(props.termcode, {
 			id: item.id,
 			grade: "?",
-			status: "?"
+			status: "FUTURE"
 		});
 	}
 }
@@ -116,4 +109,4 @@ function collect(connect, monitor) {
 	}
 }
 
-export default DropTarget("SEARCHITEM", semesterTarget, collect)(Semester);
+export default DropTarget("COURSE", semesterTarget, collect)(Semester);

@@ -19,6 +19,8 @@ class SemesterViewer extends Component {
 						  title={sem.title} 
 						  addCourse={this.props.addCourse}
 						  removeCourse={this.props.removeCourse}
+						  setCurrentCourse={this.props.setCurrentCourse}
+						  viewMode={this.props.viewMode}
 				/>
 			))
 		}

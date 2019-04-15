@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import { Input, Form, FormGroup, Button, Label } from 'reactstrap';
+import { Input, Form, FormGroup } from 'reactstrap';
 import { DragSource } from 'react-dnd'
 
-function CourseItemSearchResultBase({ connectDragSource, isDragging, id, name }) {
-	return connectDragSource(<li>{id} - {name}</li>);
+function CourseItemSearchResultBase({ connectDragSource, isDragging, id, name, setCurrentCourse}) {
+	return connectDragSource(<li onClick={setCurrentCourse}>{id} - {name}</li>);
 }
 
 function collect(connect, monitor) {
@@ -19,7 +19,7 @@ const courseItemSearchResultSource = {
 	}
 }
 
-const CourseItemSearchResult = DragSource("SEARCHITEM", courseItemSearchResultSource, collect)(CourseItemSearchResultBase);
+const CourseItemSearchResult = DragSource("COURSE", courseItemSearchResultSource, collect)(CourseItemSearchResultBase);
 
 class SearchCourses extends Component {
 	constructor(props) {
@@ -41,7 +41,7 @@ class SearchCourses extends Component {
 
 	filterCourses = (pattern) => {
 		const searchString = pattern.trim().toLowerCase();
-		const courses = this.props.courses || [];
+		const courses = this.props.course_list || [];
 		if (searchString.length > 0) {
 			return courses.filter((course) => {
 				return (course.id+course.name).toLowerCase().match(searchString);
@@ -53,25 +53,30 @@ class SearchCourses extends Component {
 	render() {
 
 		let courses = this.state.matchedCourses;
+		const showHelp = courses.length === 0;
+		const helpText = <p className="help-text">Search in the box above and drag courses onto the semester you want to take them.</p>
 		return (
 			<div className="course-search-section">
-				<h4>Search Courses</h4>
 				<Form inline={true}>
 					<FormGroup>
-						<Label for="search_input">Searcb</Label>
 						<Input name="search_input" 
 							   id="search_input"
 							   type="text" 
 							   value={this.state.searchString}
 							   onChange={this.handleChange}
 							   placeholder="Search for courses..." />
-						<Button color="primary">Search</Button>
 					</FormGroup>
 				</Form>
-				<ul>
+				<ul className={showHelp ? "help-text" : ""}>
 				{ courses && 
-				courses.map((course, i) => <CourseItemSearchResult key={i} {...course}/>)
+					courses.map((course, i) => {
+						return <CourseItemSearchResult key={i}
+							setCurrentCourse={() => this.props.setCurrentCourse(course.id)}
+							{...course}
+						/>
+					})
 				}
+				{ showHelp && helpText}
 				</ul>
 			</div>
 		);

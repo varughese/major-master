@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input } from 'reactstrap';
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import SemesterChooser from './semseter-chooser'
 
 class ControlBar extends Component {
 	constructor(props) {
 		super(props);
+		this.getTermCode = this.getTermCode.bind(this);
 		this.state = {
-			semester_code: "Enter Semester Code"
+			full_term_code: ""
 		};
 	}
 
@@ -20,31 +22,29 @@ class ControlBar extends Component {
 		this.setState({ [name]: value });
 	}
 
+	getTermCode(code){
+		this.setState({ "full_term_code": code })
+	}
+
 	render() {
-		const { semester_code } = this.state;
+		const { semester_code, year_code } = this.state;
 		return (
 			<div className="control-bar">
 				<Button color="primary" onClick={this.toggle}>Add Semester</Button>
-				<Button color="primary">Edit my info</Button>
+				<Button color="primary" onClick={() => {
+							this.props.exportPDF()
+						}}>Export to PDF</Button>
 				<Modal isOpen={this.state.modal} toggle={this.toggle}>
 					<ModalHeader toggle={this.toggle}>Add Semester</ModalHeader>
 					<ModalBody>
-						<Form>
-							<FormGroup>
-								<Label for="semester_code">Semester</Label>
-								<Input type="number" 
-									   name="semester_code" 
-									   onChange={this.onChange}
-									   value={semester_code}
-									   id="semester_code" 
-								/>
-							</FormGroup>
-							<div>{semester_code}</div>
-						</Form>
+						<SemesterChooser 
+							setTermCode={this.getTermCode}
+						/>
+						{this.state.full_term_code}
 					</ModalBody>
 					<ModalFooter>
 						<Button color="primary" onClick={() => {
-							this.props.addSemester(semester_code);
+							this.props.addSemester(this.state.full_term_code);
 							this.toggle();
 						}}>Do Something</Button>{' '}
 						<Button color="secondary" onClick={this.toggle}>Cancel</Button>
