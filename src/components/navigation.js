@@ -46,7 +46,7 @@ class NavigationBase extends Component {
     const user = this.props.firebase.getUserId();
     return (
       <Navbar color="primary" dark expand="md">
-        <NavbarBrand href="/">Major Master</NavbarBrand>
+        <NavbarBrand href="https://github.com/varughese/major-master" target="_other">Major Master</NavbarBrand>
         <NavbarToggler onClick={this.toggle} />
         <Collapse isOpen={this.state.isOpen} navbar>
           <Nav className="ml-auto bg-primary" navbar>

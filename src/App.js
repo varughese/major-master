@@ -22,12 +22,12 @@ class App extends Component {
     const isLoggedIn = this.props.firebase.getUserId();
 
     return (
-      <Router>
+      <Router basename={ROUTES.BASENAME}>
         <>
           <Navigation />
           <Container fluid>
             <Switch>
-              <Route exact path="/">
+              <Route exact path={ROUTES.LANDING}>
                 <Redirect
                   from="/"
                   to={isLoggedIn ? ROUTES.EDIT_SCHEDULE : ROUTES.SIGN_IN}

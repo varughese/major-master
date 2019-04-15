@@ -1,7 +1,8 @@
 import React from "react";
 import { Col, Button, FormGroup, Label, Input } from "reactstrap";
 import SemesterChooser from "./schedule/semseter-chooser.js"
-
+import { compose } from "recompose";
+import { withRouter } from "react-router-dom";
 import { withFirebase } from "./firebase";
 import getNextTerms from '../util/get-next-terms';
 import * as ROUTES from "../constants/routes";
@@ -290,9 +291,7 @@ class SignUpBase extends React.Component {
         semesters
       });
 
-      // this is janky lol, suppose to do similar to what
-      // kyle did with React Router
-      window.location.assign(ROUTES.LANDING);
+      this.props.history.push(ROUTES.LANDING);
     }
   }
 
@@ -453,4 +452,9 @@ class SignUpBase extends React.Component {
   }
 }
 
-export default withFirebase(SignUpBase);
+const SignUp = compose(
+  withRouter,
+  withFirebase
+)(SignUpBase);
+
+export default SignUp;
