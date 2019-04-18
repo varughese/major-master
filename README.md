@@ -48,6 +48,9 @@ You will also see any lint errors in the console.
 Python web scraping files in `scraper/` and web application files are
 in `/src/`.
 
+## Demo (v1)
+![https://imgur.com/UyhIyv4](https://i.imgur.com/UyhIyv4.gif)
+
 ## `prereq-cli`
 
 For this program to work, you must install
